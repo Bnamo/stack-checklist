@@ -115,6 +115,11 @@ footer{margin-top:20px;text-align:center;font:10.5px 'JetBrains Mono',monospace;
 #toast.show{transform:translate(-50%,0)}
 @media(hover:hover){.card{transition:transform .2s}.card:hover{transform:rotateX(.4deg)}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0}
+.bgrid input{width:100%;min-height:40px;padding:6px 8px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:12px "JetBrains Mono",monospace}
+.bwrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.bchip{font:11px "JetBrains Mono",monospace;padding:3px 8px;border-radius:8px;background:rgba(21,128,61,.12);color:#15803d;border:1px solid rgba(21,128,61,.25)}
+.bchip.hi{background:rgba(220,38,38,.1);color:#dc2626;border-color:rgba(220,38,38,.3)}
 </style>
 </head>
 <body>
@@ -159,6 +164,23 @@ footer{margin-top:20px;text-align:center;font:10.5px 'JetBrains Mono',monospace;
       <button class="btn" id="vBtn">Log</button>
     </div>
     <ul id="vHist"></ul>
+  </div>
+  <h3>Bloods <b>log</b></h3>
+  <div class="card">
+    <div class="vrow"><input type="date" id="bDate"></div>
+    <div class="bgrid">
+      <input id="b_hkt" type="number" step="0.1" placeholder="Hct % 38-49"><input id="b_hb" type="number" step="0.1" placeholder="Hb 13.5-17.5">
+      <input id="b_leuko" type="number" step="0.1" placeholder="Leuko 3.9-9.8"><input id="b_a1c" type="number" step="0.1" placeholder="HbA1c % <5.7">
+      <input id="b_k" type="number" step="0.01" placeholder="K 3.5-5.0"><input id="b_krea" type="number" step="0.01" placeholder="Krea 0.5-1.2">
+      <input id="b_uric" type="number" step="0.1" placeholder="Uric <7.2"><input id="b_bili" type="number" step="0.01" placeholder="Bili <1.2">
+      <input id="b_tc" type="number" step="1" placeholder="TC <200"><input id="b_hdl" type="number" step="1" placeholder="HDL >40">
+      <input id="b_ldl" type="number" step="1" placeholder="LDL <116"><input id="b_alt" type="number" step="1" placeholder="ALT <50">
+      <input id="b_ggt" type="number" step="1" placeholder="GGT <60"><input id="b_ap" type="number" step="1" placeholder="AP 40-130">
+      <input id="b_tsh" type="number" step="0.01" placeholder="TSH 0.4-4.0"><input id="b_e2" type="number" step="1" placeholder="E2 11-44">
+      <input id="b_ft3" type="number" step="0.01" placeholder="fT3 2.3-3.9">
+    </div>
+    <button class="btn" id="bSave" style="width:100%">Save bloods</button>
+    <div id="bList"></div>
   </div>
   <h3>Day <b>history</b></h3>
   <div id="hist"></div>
@@ -416,7 +438,8 @@ $('#t-rh').addEventListener('click',function(){tab('t-rh','p-rh')});
 function phPaint(){
   var am=new Date().getHours()<15;
   $('#ph').textContent=am?'AM':'PM';document.body.classList.toggle('pm',!am);
-  $('#dt').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
+  var wk=S&&S.start?' · week '+Math.min(52,Math.ceil((Math.floor((Date.now()-new Date(S.start+'T00:00:00'))/864e5)+1)/7)):'';
+  $('#dt').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'short'})+wk;
 }
 
 /* ---------- cycle ---------- */
@@ -429,8 +452,8 @@ function cyc(){
   $('#cycBig').innerHTML='week '+wk+' / 52';
   $('#cycSub').innerHTML='day '+day+' · week '+wk+' of 52'+oral;
 }
-$('#cycStart').addEventListener('change',function(){if(this.value){S.start=this.value;save();cyc();locks();cadPaint();impaint()}});
-$('#startBtn').addEventListener('click',function(){S.start=localDate();save();$('#cycStart').value=S.start;cyc();locks();cadPaint();impaint();toast('run started')});
+$('#cycStart').addEventListener('change',function(){if(this.value){S.start=this.value;save();cyc();locks();cadPaint();impaint();phPaint()}});
+$('#startBtn').addEventListener('click',function(){S.start=localDate();save();$('#cycStart').value=S.start;cyc();locks();cadPaint();impaint();phPaint();toast('run started')});
 function locks(){var on=!S.start;['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('locked',on)});$('#editBtn').hidden=on}
 
 /* ---------- IM rotation ---------- */
@@ -496,6 +519,35 @@ function histPaint(){
   });
 }
 
+/* ---------- bloods ---------- */
+var BK='proto-v8-bloods';
+var BBANDS={hkt:[38,49],hb:[13.5,17.5],leuko:[3.9,9.8],a1c:[4,5.7],k:[3.5,5],krea:[0.5,1.2],uric:[2,7.2],bili:[0,1.2],tc:[0,200],hdl:[40,999],ldl:[0,116],alt:[0,50],ggt:[0,60],ap:[40,130],tsh:[0.4,4],e2:[11,44],ft3:[2.3,3.9]};
+var BLBL={hkt:'Hct %',hb:'Hb',leuko:'Leuko',a1c:'HbA1c',k:'K',krea:'Krea',uric:'Uric',bili:'Bili',tc:'TC',hdl:'HDL',ldl:'LDL',alt:'ALT',ggt:'GGT',ap:'AP',tsh:'TSH',e2:'E2',ft3:'fT3'};
+function bload(){try{var v=JSON.parse(localStorage.getItem(BK)||'[]');if(!v.length){v=[{d:new Date().toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}),base:true,v:{hkt:48,hb:16.0,leuko:5.9,a1c:5.2,k:3.7,krea:0.9,uric:8.2,bili:1.1,tc:126,hdl:41,ldl:80,alt:22,ggt:13,ap:193,tsh:1.72,e2:18,ft3:3.06}}];localStorage.setItem(BK,JSON.stringify(v))}return v}catch(e){return[]}}
+function bsav(v){localStorage.setItem(BK,JSON.stringify(v))}
+function bflag(k,val){var b=BBANDS[k];return val<b[0]||val>b[1]}
+function bpaint(){
+  var v=bload(),host=$('#bList');host.innerHTML='';
+  v.slice().reverse().forEach(function(e){
+    var d=document.createElement('div');d.className='daycard';
+    var chips=Object.keys(e.v).map(function(k){var val=e.v[k];return '<span class="bchip'+(bflag(k,val)?' hi':'')+'">'+BLBL[k]+' '+val+(bflag(k,val)?' ⚠':'')+'</span>'}).join('');
+    d.innerHTML='<div class="dh">'+e.d+(e.base?' · baseline':'')+'<span>'+Object.keys(e.v).filter(function(k){return bflag(k,e.v[k])}).length+' out of range</span></div><div class="bwrap">'+chips+'</div>';
+    host.appendChild(d);
+  });
+}
+$('#bSave').addEventListener('click',function(){
+  if(!S.start){toast('press START first');return}
+  var v={},any=false;
+  Object.keys(BBANDS).forEach(function(k){var x=$('#b_'+k).value;if(x!==''){v[k]=+x;any=true}});
+  if(!any){toast('enter at least one value');return}
+  var arr=bload();arr.push({d:($('#bDate').value?new Date($('#bDate').value+'T00:00:00').toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'}):new Date().toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})),v:v});
+  if(arr.length>40)arr=arr.slice(-40);bsav(arr);bpaint();
+  Object.keys(BBANDS).forEach(function(k){$('#b_'+k).value=''});$('#bDate').value='';
+  var bad=Object.keys(v).filter(function(k){return bflag(k,v[k])}).length;
+  toast(bad?bad+' value(s) out of range — flagged':'bloods saved');
+});
+bpaint();
+
 /* ---------- reset ---------- */
 var resetArm=false;
 $('#resetBtn').addEventListener('click',function(){
@@ -512,7 +564,7 @@ function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clea
 S=load();save();
 phPaint();render();cyc();locks();impaint();vpaint();histPaint();
 if(new Date().getHours()>=15&&S.start)tab('t-pm','p-pm');
-setInterval(function(){var d=new Date().toDateString();if(d!==S.day){S.day=d;S.checked=[];S.im=[];save();render();cadPaint();impaint()}},60000);
+setInterval(function(){var d=new Date().toDateString();if(d!==S.day){S.day=d;S.checked=[];S.im=[];save();render();cadPaint();impaint()}phPaint()},60000);
 })();
 </script>
 </body>
