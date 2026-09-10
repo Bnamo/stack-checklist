@@ -113,6 +113,9 @@ body.pm .pnum{color:var(--ind)}
 #startBtn:active{transform:translateY(4px);box-shadow:0 2px 0 #6b4a06,0 6px 14px rgba(240,164,24,.3)}
 /* items */
 .grp{margin-bottom:18px}
+.it.off{opacity:.4;pointer-events:none}
+.it.cad2 input{position:absolute;opacity:0;width:1px;height:1px}
+.it.cad2.on .box{background:#e5a83c;border-color:#e5a83c}
 ul{list-style:none}
 .it{
   display:flex;align-items:center;gap:12px;padding:13px 14px;margin-bottom:9px;border-radius:16px;
@@ -261,7 +264,8 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Tadalafil</span><span class="ds">10 mg · ½ tab</span></span><span class="cat">SUP</span></label>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Cardarine</span><span class="ds">10 mg</span></span><span class="cat">SUP</span></label>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Abaloparatide</span><span class="ds">100 µg · SC</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Aromasin · NAD+ · Caber</span><span class="ds">Rhythm tab →</span></span><span class="cat">RHY</span></label>
+    <label class="it cad2" id="rowE3D"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Aromasin</span><span class="ds" id="rowE3Dds">6.25 mg · ¼ tab · E3D</span></span><span class="cat">RHY</span></label>
+    <label class="it cad2" id="rowNad"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">NAD+</span><span class="ds" id="rowNadds">100 mg · SC · weekly</span></span><span class="cat">RHY</span></label>
   </ul></div>
 </section>
 
@@ -285,6 +289,7 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
   <div class="grp"><h3>Support</h3><ul>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Melatonin</span><span class="ds">20 mg</span></span><span class="cat">SUP</span></label>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Ashwagandha</span><span class="ds">500 mg</span></span><span class="cat">SUP</span></label>
+    <label class="it cad2" id="rowCab"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Cabergoline</span><span class="ds" id="rowCabds">0.25 mg · 2× weekly · with food</span></span><span class="cat">RHY</span></label>
   </ul></div>
 </section>
 
@@ -343,7 +348,7 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
   <b>Drawer</b><p>LUPI hCG (Rule 7) · Dostiheal reserve · Clomide (PCT) · Euthyrox + Cytomel (sealed)</p>
 </div></details>
 
-<footer>checks reset at midnight · saved on this device</footer>
+<footer>checks reset at midnight · saved on this device · <button id="resetBtn" style="font:inherit;background:none;border:1px solid #5c5342;color:#b09a6a;border-radius:6px;padding:4px 10px;cursor:pointer">reset all data</button></footer>
 </div>
 
 <script>
@@ -420,12 +425,12 @@ function cyc(){
   sub.innerHTML='day '+day+' · week '+wk+' of 52'+oral;
 }
 $('#cycStart').addEventListener('change',function(){
-  if(this.value){S.start=this.value;save();cyc();impaint();locks()}
+  if(this.value){S.start=this.value;save();cyc();impaint();locks();paintCadRows()}
 });
 $('#startBtn').onclick=function(){
   var n=new Date();
   S.start=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
-  save();$('#cycStart').value=S.start;cyc();impaint();locks();
+  save();$('#cycStart').value=S.start;cyc();impaint();locks();paintCadRows();
 };
 function locks(){
   var on=!S.start;
@@ -457,9 +462,9 @@ function weekly(arr,goal,el){
   el.textContent=n+'/'+goal+' this wk';
   el.className='state'+(n>=goal?' ok':'');
 }
-$('#e3dBtn').onclick=function(){if(!S.start)return;S.e3d=e3dAge()===0?null:Date.now();save();e3d();btnTxt()};
-$('#cabBtn').onclick=function(){if(!S.start)return;S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save();weekly(S.cab,2,$('#cabSt'));btnTxt()};
-$('#nadBtn').onclick=function(){if(!S.start)return;S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save();weekly(S.nad,1,$('#nadSt'));btnTxt()};
+$('#e3dBtn').onclick=function(){if(!S.start)return;S.e3d=e3dAge()===0?null:Date.now();save();e3d();btnTxt();paintCadRows()};
+$('#cabBtn').onclick=function(){if(!S.start)return;S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save();weekly(S.cab,2,$('#cabSt'));btnTxt();paintCadRows()};
+$('#nadBtn').onclick=function(){if(!S.start)return;S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save();weekly(S.nad,1,$('#nadSt'));btnTxt();paintCadRows()};
 
 /* IM rotation */
 var SPOTS=['L shoulder','R shoulder','L glute','R glute'];
@@ -517,7 +522,39 @@ if(tiltOK&&window.matchMedia('(hover:hover)').matches){
 }
 
 /* init */
+function wkCount(arr){return (arr||[]).filter(function(t){return wkKey(t)===wkKey(Date.now())}).length}
+function paintCadRows(){
+  if(!S.start){['rowE3D','rowCab','rowNad'].forEach(function(id){var r=document.getElementById(id);if(r)r.classList.add('off')});return}
+  var e=e3dAge(), rE=document.getElementById('rowE3D'), cE=document.getElementById('rowE3Dds'), cbE=rE.querySelector('input');
+  rE.classList.remove('off');cbE.checked=false;
+  if(e===0){cbE.checked=true;rE.classList.add('off');cE.textContent='done today'}
+  else if(e===null||e>=3){cE.textContent='due today · ¼ tab'}
+  else{rE.classList.add('off');cE.textContent='day '+e+' of 3 · not today'}
+  var rC=document.getElementById('rowCab'),cC=document.getElementById('rowCabds'),cbC=rC.querySelector('input'),wC=wkCount(S.cab),tC=todayIn(S.cab);
+  rC.classList.remove('off');cbC.checked=!!tC;
+  if(tC){rC.classList.add('off');cC.textContent='done this week '+(wC)+'/2'}
+  else if(wC>=2){rC.classList.add('off');cC.textContent='2/2 this week'}
+  else{cC.textContent='due · '+(2-wC)+' left this week'}
+  var rN=document.getElementById('rowNad'),cN=document.getElementById('rowNadds'),cbN=rN.querySelector('input'),tN=todayIn(S.nad);
+  rN.classList.remove('off');cbN.checked=!!tN;
+  if(tN){rN.classList.add('off');cN.textContent='done this week'}
+  else{cN.textContent='due this week · pick your day'}
+}
+['rowE3D','rowCab','rowNad'].forEach(function(id){
+  var r=document.getElementById(id);if(!r)return;
+  r.addEventListener('change',function(){
+    if(!S.start)return;
+    if(id==='rowE3D'){S.e3d=e3dAge()===0?null:Date.now();save();e3d();btnTxt()}
+    if(id==='rowCab'){S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save();weekly(S.cab,2,$('#cabSt'));btnTxt()}
+    if(id==='rowNad'){S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save();weekly(S.nad,1,$('#nadSt'));btnTxt()}
+    paintCadRows();
+  });
+});
+document.getElementById('resetBtn').onclick=function(){
+  if(confirm('Reset everything? Clears all logs, vitals and the start date.')){localStorage.removeItem('proto-v4');localStorage.removeItem('proto-vitals');location.reload()}
+};
 cyc();locks();impaint();paint();e3d();weekly(S.cab,2,$('#cabSt'));weekly(S.nad,1,$('#nadSt'));btnTxt();vpaint();
+paintCadRows();
 })();
 </script>
 </body>
