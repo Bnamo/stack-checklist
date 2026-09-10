@@ -158,6 +158,11 @@
   @media (prefers-reduced-motion:reduce){
     *{transition:none!important;animation:none!important}
   }
+
+  /* pre-start lock: visible but inert */
+  .panel.locked .it,.panel.locked .cad{opacity:.45;pointer-events:none}
+  #startBtn{width:100%;margin-top:10px;padding:16px;border:2px solid #111;border-radius:12px;background:#111;color:#fff;font:800 15px Inter,sans-serif;letter-spacing:.08em;cursor:pointer}
+  #startBtn:active{background:#333}
 </style>
 </head>
 <body>
@@ -190,6 +195,7 @@
       <div class="l">Cycle tracker</div>
       <div class="big" id="cycBig">set start date</div>
       <div class="sub" id="cycSub">52-week run · 6-week oral window</div>
+      <button id="startBtn" type="button" hidden>START RUN</button>
       <input type="date" id="cycStart" aria-label="cycle start date">
     </div>
 
@@ -314,22 +320,7 @@
     </div>
   </section>
 
-  <!-- ═══ START GATE ═══ -->
-  <div id="gate" style="display:none">
-    <style>
-      #gate{position:fixed;inset:0;z-index:50;background:rgba(255,255,255,.97);display:flex;align-items:center;justify-content:center;padding:24px}
-      #gate .gbox{text-align:center;max-width:320px}
-      #gate h2{font:800 26px Inter,sans-serif;letter-spacing:-.02em;margin:0 0 8px}
-      #gate p{font:15px/1.5 Inter,sans-serif;color:#555;margin:0 0 20px}
-      #startBtn{width:100%;padding:18px;border:2px solid #111;border-radius:12px;background:#111;color:#fff;font:800 16px Inter,sans-serif;letter-spacing:.08em;cursor:pointer}
-      #startBtn:active{background:#333}
-    </style>
-    <div class="gbox">
-      <h2>Protocol locked</h2>
-      <p>Nothing logs before the run begins. Press start on day one — everything unlocks.</p>
-      <button id="startBtn" type="button">START CYCLE</button>
-    </div>
-  </div>
+  <!-- ═══ START GATE (inline in cycle card) ═══ -->
 
   <!-- ═══ REFERENCE ═══ -->
   <details>
@@ -396,7 +387,6 @@
   $('t-am').onclick = function(){ tab('t-am','p-am'); };
   $('t-pm').onclick = function(){ tab('t-pm','p-pm'); };
   $('t-rh').onclick = function(){ tab('t-rh','p-rh'); };
-  if(!isAM) tab('t-pm','p-pm');
 
   /* state */
   function load(){
@@ -410,6 +400,7 @@
   function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
   var S = load();
   if(S.day !== now.toDateString()){ S = {day:now.toDateString(), checked:[], e3d:S.e3d||null, cab:[], nad:[], im:[], start:S.start||null}; save(); }
+  if(!isAM && S.start) tab('t-pm','p-pm');
 
   /* keep start date across days */
   $('cycStart').value = S.start || '';
@@ -417,7 +408,8 @@
 
   /* cycle tracker */
   function cyc(){
-    if(!S.start){ $('cycBig').textContent = 'set start date'; $('cycSub').textContent = '52-week run · 6-week oral window'; return; }
+    if(!S.start){ $('cycBig').textContent = 'READY'; $('cycSub').textContent = 'nothing logs until the run begins'; $('startBtn').hidden = false; return; }
+    $('startBtn').hidden = true;
     var d0 = new Date(S.start + 'T00:00:00');
     var days = Math.floor((now - d0) / 86400000);
     if(days < 0){ $('cycBig').innerHTML = 'starts in ' + (-days) + ' <small>days</small>'; $('cycSub').textContent = '52-week run · 6-week oral window'; return; }
@@ -441,6 +433,7 @@
   }
   function idx(el){ return Array.prototype.indexOf.call(items, el); }
   function toggle(el){
+    if(!S.start) return;
     var i = idx(el);
     if(i < 0) return;
     var cb = el.querySelector('.cbx');
@@ -467,7 +460,7 @@
     else if(age >= 3){ st.textContent = 'due today'; st.className = 'st due'; }
     else { st.textContent = 'day ' + age + '/3'; st.className = 'st wait'; }
   }
-  $('e3dBtn').onclick = function(){
+  $('e3dBtn').onclick = function(){ if(!S.start) return;
     if(S.e3d && Math.floor((now - new Date(S.e3d)) / DAY) === 0){ S.e3d = null; }
     else { S.e3d = now.toISOString(); }
     save(); e3d(); btnTxt();
@@ -489,8 +482,8 @@
     if(n >= goal){ st.textContent = goal + '/' + goal + ' this wk'; st.className = 'st ok'; }
     else { st.textContent = n + '/' + goal + ' this wk'; st.className = 'st due'; }
   }
-  $('cabBtn').onclick = function(){ if(todayIn(S.cab)) rmToday(S.cab); else S.cab.push(now.toISOString()); save(); weekly(S.cab,2,'cabSt'); btnTxt(); };
-  $('nadBtn').onclick = function(){ if(todayIn(S.nad)) rmToday(S.nad); else S.nad.push(now.toISOString()); save(); weekly(S.nad,1,'nadSt'); btnTxt(); };
+  $('cabBtn').onclick = function(){ if(!S.start) return; if(todayIn(S.cab)) rmToday(S.cab); else S.cab.push(now.toISOString()); save(); weekly(S.cab,2,'cabSt'); btnTxt(); };
+  $('nadBtn').onclick = function(){ if(!S.start) return; if(todayIn(S.nad)) rmToday(S.nad); else S.nad.push(now.toISOString()); save(); weekly(S.nad,1,'nadSt'); btnTxt(); };
 
   e3d(); weekly(S.cab,2,'cabSt'); weekly(S.nad,1,'nadSt'); btnTxt();
 
@@ -512,7 +505,7 @@
       row.type = 'button';
       row.className = 'spot' + (S.im.indexOf(k) >= 0 ? ' hit' : '');
       row.innerHTML = '<b>' + nm + ' mg</b><span>&rarr; ' + spot + '</span>';
-      row.onclick = function(){
+      row.onclick = function(){ if(!S.start) return;
         var p = S.im.indexOf(k);
         if(p >= 0) S.im.splice(p,1); else S.im.push(k);
         save(); impaint();
@@ -523,14 +516,19 @@
     st.className = S.im.length >= 3 ? 'st ok' : 'st due';
   }
 
-  /* start gate */
-  function gate(){ $('gate').style.display = S.start ? 'none' : 'flex'; }
+  /* start button — inline in cycle card */
   $('startBtn').onclick = function(){
     var y = now.getFullYear(), m = ('0' + (now.getMonth() + 1)).slice(-2), dd = ('0' + now.getDate()).slice(-2);
     S.start = y + '-' + m + '-' + dd;
-    save(); $('cycStart').value = S.start; cyc(); gate(); impaint();
+    save(); $('cycStart').value = S.start; cyc(); impaint(); locks();
   };
-  gate(); impaint();
+  function locks(){
+    var locked = !S.start;
+    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function(p){
+      p.classList.toggle('locked', locked);
+    });
+  }
+  locks(); impaint();
 
   /* vitals — persistent history (survives midnight reset) */
   var VKEY = 'proto-vitals';
@@ -546,6 +544,7 @@
     });
   }
   $('vBtn').onclick = function(){
+    if(!S.start) return;
     var g = $('vGlu').value.trim(), b = $('vBp').value.trim();
     if(!g && !b) return;
     var gn = parseInt(g,10);
