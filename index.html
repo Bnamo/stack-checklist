@@ -300,7 +300,36 @@
       </div>
       <ul class="vhist" id="vHist"></ul>
     </div>
+    <div class="cad" id="imRot">
+      <style>
+        #imList{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+        .spot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border:1.5px solid #111;border-radius:10px;background:#fff;font:600 14px Inter,sans-serif;text-align:left;cursor:pointer;width:100%}
+        .spot span{color:#555;font:12px ui-monospace,monospace}
+        .spot.hit{background:#111;color:#fff}
+        .spot.hit span{color:#bbb}
+      </style>
+      <div class="top-l"><h3>IM rotation</h3><span class="st" id="imSt">—</span></div>
+      <p>3 daily injections · 4 sites · shoulders + glutes · tap to log</p>
+      <div id="imList"></div>
+    </div>
   </section>
+
+  <!-- ═══ START GATE ═══ -->
+  <div id="gate" style="display:none">
+    <style>
+      #gate{position:fixed;inset:0;z-index:50;background:rgba(255,255,255,.97);display:flex;align-items:center;justify-content:center;padding:24px}
+      #gate .gbox{text-align:center;max-width:320px}
+      #gate h2{font:800 26px Inter,sans-serif;letter-spacing:-.02em;margin:0 0 8px}
+      #gate p{font:15px/1.5 Inter,sans-serif;color:#555;margin:0 0 20px}
+      #startBtn{width:100%;padding:18px;border:2px solid #111;border-radius:12px;background:#111;color:#fff;font:800 16px Inter,sans-serif;letter-spacing:.08em;cursor:pointer}
+      #startBtn:active{background:#333}
+    </style>
+    <div class="gbox">
+      <h2>Protocol locked</h2>
+      <p>Nothing logs before the run begins. Press start on day one — everything unlocks.</p>
+      <button id="startBtn" type="button">START CYCLE</button>
+    </div>
+  </div>
 
   <!-- ═══ REFERENCE ═══ -->
   <details>
@@ -373,13 +402,14 @@
   function load(){
     try{
       var s = JSON.parse(localStorage.getItem(KEY) || '{}');
-      if(s.day !== now.toDateString()) return {day:now.toDateString(), checked:[], e3d:null, cab:[], nad:[], start:null};
+      if(s.day !== now.toDateString()) return {day:now.toDateString(), checked:[], e3d:null, cab:[], nad:[], im:[], start:null};
+      if(!s.im) s.im = [];
       return s;
-    }catch(e){ return {day:now.toDateString(), checked:[], e3d:null, cab:[], nad:[], start:null}; }
+    }catch(e){ return {day:now.toDateString(), checked:[], e3d:null, cab:[], nad:[], im:[], start:null}; }
   }
   function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
   var S = load();
-  if(S.day !== now.toDateString()){ S = {day:now.toDateString(), checked:[], e3d:S.e3d||null, cab:[], nad:[], start:S.start||null}; save(); }
+  if(S.day !== now.toDateString()){ S = {day:now.toDateString(), checked:[], e3d:S.e3d||null, cab:[], nad:[], im:[], start:S.start||null}; save(); }
 
   /* keep start date across days */
   $('cycStart').value = S.start || '';
@@ -437,7 +467,18 @@
     else if(age >= 3){ st.textContent = 'due today'; st.className = 'st due'; }
     else { st.textContent = 'day ' + age + '/3'; st.className = 'st wait'; }
   }
-  $('e3dBtn').onclick = function(){ S.e3d = now.toISOString(); save(); e3d(); };
+  $('e3dBtn').onclick = function(){
+    if(S.e3d && Math.floor((now - new Date(S.e3d)) / DAY) === 0){ S.e3d = null; }
+    else { S.e3d = now.toISOString(); }
+    save(); e3d(); btnTxt();
+  };
+  function todayIn(arr){ return arr.some(function(x){ return new Date(x).toDateString() === now.toDateString(); }); }
+  function rmToday(arr){ for(var i = arr.length - 1; i >= 0; i--){ if(new Date(arr[i]).toDateString() === now.toDateString()){ arr.splice(i,1); return; } } }
+  function btnTxt(){
+    $('e3dBtn').textContent = (S.e3d && Math.floor((now - new Date(S.e3d)) / DAY) === 0) ? 'Undo today' : 'Log dose';
+    $('cabBtn').textContent = todayIn(S.cab) ? 'Undo today' : 'Log dose';
+    $('nadBtn').textContent = todayIn(S.nad) ? 'Undo today' : 'Log dose';
+  }
 
   /* rhythm — weekly counters (ISO week key) */
   function wkKey(d){ var d2 = new Date(d); d2.setHours(0,0,0,0); d2.setDate(d2.getDate() + 3 - ((d2.getDay()+6)%7)); var w1 = new Date(d2.getFullYear(),0,4); return d2.getFullYear() + '-W' + (1 + Math.round(((d2 - w1)/86400000 - 3 + ((w1.getDay()+6)%7))/7)); }
@@ -448,10 +489,48 @@
     if(n >= goal){ st.textContent = goal + '/' + goal + ' this wk'; st.className = 'st ok'; }
     else { st.textContent = n + '/' + goal + ' this wk'; st.className = 'st due'; }
   }
-  $('cabBtn').onclick = function(){ S.cab.push(now.toISOString()); save(); weekly(S.cab,2,'cabSt'); };
-  $('nadBtn').onclick = function(){ S.nad.push(now.toISOString()); save(); weekly(S.nad,1,'nadSt'); };
+  $('cabBtn').onclick = function(){ if(todayIn(S.cab)) rmToday(S.cab); else S.cab.push(now.toISOString()); save(); weekly(S.cab,2,'cabSt'); btnTxt(); };
+  $('nadBtn').onclick = function(){ if(todayIn(S.nad)) rmToday(S.nad); else S.nad.push(now.toISOString()); save(); weekly(S.nad,1,'nadSt'); btnTxt(); };
 
-  e3d(); weekly(S.cab,2,'cabSt'); weekly(S.nad,1,'nadSt');
+  e3d(); weekly(S.cab,2,'cabSt'); weekly(S.nad,1,'nadSt'); btnTxt();
+
+  /* IM rotation — 4 sites, 3 daily injections, day-keyed */
+  var SPOTS = ['L shoulder','R shoulder','L glute','R glute'];
+  function imDay(){
+    if(!S.start) return null;
+    var d0 = new Date(S.start + 'T00:00:00');
+    return Math.max(0, Math.floor((now - d0) / 86400000));
+  }
+  function impaint(){
+    var d = imDay(), wrap = $('imList'), st = $('imSt');
+    if(d === null){ wrap.innerHTML = '<p style="margin:10px 0 0;font:13px Inter,sans-serif;color:#777">set start date first</p>'; st.textContent = '—'; st.className = 'st wait'; return; }
+    var names = ['Testosterone E 12.5','Trenbolone E 30','Masteron E 40'];
+    wrap.innerHTML = '';
+    names.forEach(function(nm, k){
+      var spot = SPOTS[(d + k) % 4];
+      var row = document.createElement('button');
+      row.type = 'button';
+      row.className = 'spot' + (S.im.indexOf(k) >= 0 ? ' hit' : '');
+      row.innerHTML = '<b>' + nm + ' mg</b><span>&rarr; ' + spot + '</span>';
+      row.onclick = function(){
+        var p = S.im.indexOf(k);
+        if(p >= 0) S.im.splice(p,1); else S.im.push(k);
+        save(); impaint();
+      };
+      wrap.appendChild(row);
+    });
+    st.textContent = S.im.length + '/3 logged';
+    st.className = S.im.length >= 3 ? 'st ok' : 'st due';
+  }
+
+  /* start gate */
+  function gate(){ $('gate').style.display = S.start ? 'none' : 'flex'; }
+  $('startBtn').onclick = function(){
+    var y = now.getFullYear(), m = ('0' + (now.getMonth() + 1)).slice(-2), dd = ('0' + now.getDate()).slice(-2);
+    S.start = y + '-' + m + '-' + dd;
+    save(); $('cycStart').value = S.start; cyc(); gate(); impaint();
+  };
+  gate(); impaint();
 
   /* vitals — persistent history (survives midnight reset) */
   var VKEY = 'proto-vitals';
