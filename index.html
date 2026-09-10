@@ -2,559 +2,522 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#ffffff">
-<title>Protocol — Daily</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Protocol</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --ink:#0d0d0f; --paper:#ffffff; --row:#fafafa; --line:#e8e8ea;
-    --dim:#8a8a90; --faint:#b9b9bf;
-    --am:#92600a; --pm:#2f4bb5; --ok:#137a3d; --warn:#b42318;
-    --accent:var(--am);
-    --r:14px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{
-    font-family:'Inter',system-ui,-apple-system,sans-serif;
-    background:var(--paper); color:var(--ink);
-    font-size:16px; line-height:1.45;
-    -webkit-font-smoothing:antialiased;
-    font-feature-settings:'tnum';
-  }
-  body.pm{--accent:var(--pm)}
-  .wrap{max-width:560px;margin:0 auto;padding:0 16px 90px}
+:root{
+  --bg:#0b0a08; --bg2:#14110c; --card:#1b1712; --card2:#221d15;
+  --ink:#f2ede3; --mut:#a89e8c; --line:#332b1f;
+  --am:#f0a418; --am2:#c47f0a; --ind:#7f96ff;
+  --ok:#4ec98a; --bad:#ff6b57;
+  --mono:'JetBrains Mono',monospace; --disp:'Manrope',sans-serif; --body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(1200px 500px at 50% -100px,#2a2113 0%,transparent 60%),
+    radial-gradient(900px 600px at 110% 110%,#191308 0%,transparent 55%),
+    var(--bg);
+  color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.5;
+  min-height:100dvh; overflow-x:hidden;
+}
+.scene{perspective:1400px; perspective-origin:50% 0%; max-width:560px; margin:0 auto; padding:0 14px 90px;}
+/* ---------- header ---------- */
+header{
+  position:sticky; top:0; z-index:40; margin:0 -14px; padding:14px 18px 12px;
+  background:linear-gradient(180deg,rgba(11,10,8,.96),rgba(11,10,8,.82));
+  backdrop-filter:blur(14px); border-bottom:1px solid var(--line);
 
-  /* top bar */
-  .top{
-    position:sticky; top:0; z-index:20;
-    background:var(--paper);
-    border-bottom:1px solid var(--line);
-    padding:calc(10px + env(safe-area-inset-top)) 16px 0;
-  }
-  .top-in{max-width:560px;margin:0 auto}
-  .top-row{display:flex;align-items:baseline;gap:10px}
-  .top-row h1{font-size:22px;font-weight:800;letter-spacing:-.02em}
-  .phase{
-    font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
-    color:var(--accent);
-  }
-  .top-row .d{margin-left:auto;font-size:12px;color:var(--dim)}
-  .meter{display:flex;align-items:center;gap:10px;margin:10px 0 12px}
-  .meter .bar{flex:1;height:4px;background:var(--line);border-radius:2px;overflow:hidden}
-  .meter .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s ease}
-  .meter b{font-size:13px;font-weight:600;min-width:52px;text-align:right}
-  .meter b small{color:var(--dim);font-weight:400}
+}
+.hrow{display:flex;align-items:center;gap:10px}
+h1{
+  font-family:var(--disp); font-weight:800; font-size:26px; letter-spacing:-.5px;
+  color:var(--ink);
+  text-shadow:0 1px 0 #4d3c12,0 2px 0 #3a2d0c,0 3px 0 #2a2008,0 6px 14px rgba(240,164,24,.28);
+}
+h1 em{font-style:normal;color:var(--am)}
+.chip{
+  font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em;
+  padding:5px 10px; border-radius:999px; text-transform:uppercase;
+  background:linear-gradient(180deg,#3d2f10,#2a2008); color:var(--am);
+  border:1px solid #5b4514; box-shadow:0 2px 0 #1a1305,inset 0 1px 0 rgba(255,220,140,.25);
+}
+body.pm .chip{background:linear-gradient(180deg,#232a4d,#161b33);color:var(--ind);border-color:#39437a;box-shadow:0 2px 0 #0e1123,inset 0 1px 0 rgba(170,190,255,.25)}
+.hdate{font-family:var(--mono);font-size:11px;color:var(--mut);margin-left:auto;text-align:right}
+/* progress */
+.pmeter{margin-top:12px; display:flex; align-items:center; gap:10px}
+.pbar{flex:1; height:16px; border-radius:999px; background:#0e0b07; border:1px solid var(--line);
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.7); overflow:hidden; position:relative}
+.pfill{
+  height:100%; width:0%; border-radius:999px;
+  background:linear-gradient(180deg,#ffd270,var(--am) 45%,var(--am2));
+  box-shadow:0 0 12px rgba(240,164,24,.5),inset 0 1px 0 rgba(255,255,255,.4);
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+.pnum{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--am);min-width:52px;text-align:right}
+body.pm .pfill{background:linear-gradient(180deg,#b9c8ff,var(--ind) 45%,#4a5fb8);box-shadow:0 0 12px rgba(127,150,255,.5),inset 0 1px 0 rgba(255,255,255,.4)}
+body.pm .pnum{color:var(--ind)}
+/* tabs */
+.tabs{display:flex;gap:8px;margin-top:12px}
+.tabs button{
+  flex:1; font-family:var(--disp); font-weight:700; font-size:14px; letter-spacing:.02em;
+  padding:12px 8px; border-radius:14px; color:var(--mut); background:linear-gradient(180deg,#241e14,#17130c);
+  border:1px solid var(--line); cursor:pointer;
+  box-shadow:0 4px 0 #0a0805,0 8px 16px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);
+  transition:transform .12s,box-shadow .12s,color .12s;
+}
+.tabs button:active{transform:translateY(3px);box-shadow:0 1px 0 #0a0805,0 3px 8px rgba(0,0,0,.5)}
+.tabs button[aria-selected="true"]{
+  color:#1a1204; background:linear-gradient(180deg,#ffd873,var(--am));
+  border-color:#8a5f0a; box-shadow:0 4px 0 #6b4a06,0 10px 20px rgba(240,164,24,.35),inset 0 1px 0 rgba(255,255,255,.5);
+}
+/* ---------- panels & cards ---------- */
+.panel{display:none;padding-top:16px}
+.panel.on{display:block}
+.panel.locked .it,.panel.locked .cad,.panel.locked .spot,.panel.locked .vrow{opacity:.4;pointer-events:none;filter:saturate(.4)}
+.tilt{transform-style:preserve-3d;will-change:transform}
+.card{
+  background:linear-gradient(165deg,var(--card2),var(--card) 55%);
+  border:1px solid var(--line); border-radius:20px; padding:16px; margin-bottom:16px;
+  box-shadow:0 1px 0 rgba(255,235,190,.07) inset,0 18px 30px -14px rgba(0,0,0,.85),0 34px 60px -30px rgba(0,0,0,.6);
 
-  /* tabs */
-  .tabs{display:flex;gap:4px;padding-bottom:10px}
-  .tabs button{
-    flex:1; border:0; border-radius:10px; background:var(--row);
-    font:600 13px/1 'Inter',sans-serif; color:var(--dim);
-    padding:11px 0; cursor:pointer; transition:background .15s,color .15s;
-  }
-  .tabs button.on{background:var(--ink);color:#fff}
-  .tabs button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-
-  /* panels */
-  .panel{display:none}
-  .panel.on{display:block}
-  .cyc{
-    border:1px solid var(--line); border-radius:var(--r);
-    padding:14px 16px; margin:16px 0;
-  }
-  .cyc .l{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--dim)}
-  .cyc .big{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:2px 0 6px}
-  .cyc .big small{font-size:14px;font-weight:600;color:var(--dim)}
-  .cyc .sub{font-size:13px;color:var(--dim)}
-  .cyc .sub b{color:var(--ink);font-weight:600}
-  .cyc .sub .hot{color:var(--warn);font-weight:600}
-  .cyc input{
-    border:1px solid var(--line);border-radius:8px;
-    font:400 13px 'Inter',sans-serif;padding:6px 8px;margin-top:8px;background:#fff;
-  }
-
-  .grp{margin:22px 0 6px;display:flex;align-items:baseline;gap:8px}
-  .grp h2{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-  .grp span{font-size:11px;color:var(--faint);font-weight:600}
-
-  ul.items{list-style:none}
-  .it{
-    display:flex;align-items:center;gap:12px;
-    border:1px solid var(--line);border-radius:12px;
-    background:#fff;padding:13px 14px;margin-bottom:8px;
-    cursor:pointer;user-select:none;min-height:56px;position:relative;
-    transition:border-color .15s,opacity .2s;
-  }
-  .it:active{background:var(--row)}
-  .it:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-  .box{
-    width:24px;height:24px;flex:none;border-radius:50%;
-    border:2px solid var(--faint);display:grid;place-items:center;
-    transition:background .15s,border-color .15s;
-  }
-  .box svg{width:13px;height:13px;opacity:0;transform:scale(.5);transition:.15s}
-  .it.done .box{background:var(--ink);border-color:var(--ink)}
-  .it.done .box svg{opacity:1;transform:scale(1)}
-  .it.done .tx{opacity:.42}
-  .cbx{position:absolute;opacity:0;width:1px;height:1px;margin:0}
-  .it.done .nm{text-decoration:line-through;text-decoration-thickness:1.5px}
-  .tx{flex:1;min-width:0}
-  .nm{font-size:15px;font-weight:600;letter-spacing:-.01em}
-  .ds{font-size:13px;color:var(--dim);margin-top:1px}
-  .tag{
-    flex:none;font-size:10px;font-weight:600;letter-spacing:.07em;
-    color:var(--dim);border:1px solid var(--line);border-radius:6px;
-    padding:3px 7px;text-transform:uppercase;
-  }
-  .tag.hot{color:var(--warn);border-color:#ecc8c4}
-  .cat{flex:none;font-size:9px;font-weight:600;letter-spacing:.08em;color:var(--faint)}
-
-  /* rhythm panel */
-  .cad{
-    border:1px solid var(--line);border-radius:var(--r);
-    padding:16px;margin-bottom:10px;background:#fff;
-  }
-  .cad .top-l{display:flex;align-items:center;gap:10px}
-  .cad h3{font-size:16px;font-weight:800;letter-spacing:-.01em}
-  .cad .st{
-    margin-left:auto;font-size:11px;font-weight:600;letter-spacing:.06em;
-    text-transform:uppercase;padding:4px 10px;border-radius:7px;
-  }
-  .cad .st.due{background:#fdf0ef;color:var(--warn)}
-  .cad .st.ok{background:#edf7f0;color:var(--ok)}
-  .cad .st.wait{background:var(--row);color:var(--dim)}
-  .cad p{font-size:13px;color:var(--dim);margin-top:6px}
-  .cad .act{
-    margin-top:12px;border:0;border-radius:10px;background:var(--ink);color:#fff;
-    font:600 14px 'Inter',sans-serif;padding:12px 18px;cursor:pointer;width:100%;
-  }
-  .cad .act:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-
-  /* collapsibles */
-  details{border-top:1px solid var(--line);padding:4px 0}
-  details summary{
-    list-style:none;cursor:pointer;padding:16px 0;
-    font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
-    display:flex;align-items:center;
-  }
-  details summary::-webkit-details-marker{display:none}
-  details summary::after{content:'+';margin-left:auto;font-size:18px;color:var(--dim);font-weight:400}
-  details[open] summary::after{content:'–'}
-  details summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
-  .rules li,.stock li{font-size:14px;color:#3c3c40;padding:5px 0 5px 0;list-style:none;border-bottom:1px solid #f2f2f4}
-  .rules li:last-child,.stock li:last-child{border-bottom:0}
-  .rules b,.stock b{font-weight:600}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:16px}
-  .chip{
-    font-size:11px;font-weight:600;color:#3c3c40;
-    border:1px solid var(--line);border-radius:8px;padding:6px 10px;
-  }
-  .stock h4{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:10px 0 4px}
-  footer{margin-top:28px;font-size:11px;color:var(--faint);text-align:center}
-
-  @media (prefers-reduced-motion:reduce){
-    *{transition:none!important;animation:none!important}
-  }
-
-  /* pre-start lock: visible but inert */
-  .panel.locked .it,.panel.locked .cad{opacity:.45;pointer-events:none}
-  #startBtn{width:100%;margin-top:10px;padding:16px;border:2px solid #111;border-radius:12px;background:#111;color:#fff;font:800 15px Inter,sans-serif;letter-spacing:.08em;cursor:pointer}
-  #startBtn:active{background:#333}
+}
+.card h3{
+  font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);
+  margin-bottom:10px; display:flex; align-items:center; gap:8px;
+}
+.card h3::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--am);box-shadow:0 0 10px rgba(240,164,24,.7);transform:rotate(45deg)}
+/* cycle card */
+#cyc{border-color:#5b4514;background:linear-gradient(165deg,#2d2210,#1a1409 60%)}
+#cyc .cycBig{
+  font-family:var(--disp);font-weight:800;font-size:34px;letter-spacing:-1px;color:var(--am);
+  text-shadow:0 2px 0 #3a2a08,0 4px 0 #241a04,0 10px 24px rgba(240,164,24,.35);
+}
+#cyc .cycSub{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:4px}
+#cyc .hot{color:var(--bad);font-weight:700}
+.cycRow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+#cycStart{
+  font-family:var(--mono);font-size:13px;color:var(--ink);background:#0e0b07;border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px; box-shadow:inset 0 3px 6px rgba(0,0,0,.6);
+}
+#startBtn{
+  font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:.06em;color:#1a1204;
+  background:linear-gradient(180deg,#ffd873,#f0a418 60%,#d18c0b);
+  border:1px solid #8a5f0a;border-radius:14px;padding:13px 26px;cursor:pointer;width:100%;
+  box-shadow:0 6px 0 #6b4a06,0 14px 26px rgba(240,164,24,.35),inset 0 1px 0 rgba(255,255,255,.55);
+  transition:transform .1s,box-shadow .1s;
+}
+#startBtn:active{transform:translateY(4px);box-shadow:0 2px 0 #6b4a06,0 6px 14px rgba(240,164,24,.3)}
+/* items */
+.grp{margin-bottom:18px}
+ul{list-style:none}
+.it{
+  display:flex;align-items:center;gap:12px;padding:13px 14px;margin-bottom:9px;border-radius:16px;
+  background:linear-gradient(165deg,#26201568,#1d1810); border:1px solid var(--line); cursor:pointer;
+  box-shadow:0 3px 0 #0c0a06,0 8px 16px -6px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,240,200,.05);
+  transition:transform .14s,box-shadow .14s,border-color .2s; position:relative; min-height:56px;
+  transform-style:preserve-3d;
+}
+.it:active{transform:translateY(2px);box-shadow:0 1px 0 #0c0a06,0 4px 10px -4px rgba(0,0,0,.6)}
+.it input{position:absolute;opacity:0;width:1px;height:1px}
+.box{
+  width:30px;height:30px;flex:0 0 30px;border-radius:10px;position:relative;
+  background:linear-gradient(180deg,#171209,#0e0b06);border:1.5px solid #4a3a16;
+  box-shadow:0 3px 0 #080604,inset 0 1px 0 rgba(255,220,140,.12);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s,border-color .2s;
+  transform-style:preserve-3d;
+}
+.box svg{position:absolute;inset:0;margin:auto;width:18px;height:18px;opacity:0;transform:rotateY(90deg) scale(.4);transition:all .3s .05s cubic-bezier(.34,1.56,.64,1)}
+.it input:checked~.box{background:linear-gradient(180deg,#ffd873,var(--am));border-color:#8a5f0a;transform:rotateY(180deg) scale(1.06)}
+.it input:checked~.box svg{opacity:1;transform:rotateY(180deg) scale(1)}
+.it input:focus-visible~.box{outline:2px solid var(--am);outline-offset:2px}
+.tx{flex:1;display:flex;flex-direction:column;gap:1px}
+.nm{font-family:var(--disp);font-weight:700;font-size:15px;transition:color .2s}
+.ds{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.cat{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--mut);
+  border:1px solid var(--line);border-radius:6px;padding:2px 6px;align-self:flex-start;background:#0e0b07}
+.it:has(input:checked){border-color:#6b4f14;background:linear-gradient(165deg,#33270f22,#1d1810)}
+.it:has(input:checked) .nm{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--am2);text-decoration-thickness:2px}
+/* cadence / vitals / IM cards */
+.cad{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;margin-bottom:10px;
+  background:linear-gradient(165deg,#26201568,#1d1810);border:1px solid var(--line);
+  box-shadow:0 3px 0 #0c0a06,0 10px 18px -8px rgba(0,0,0,.6);flex-wrap:wrap}
+.cad .tx{flex:1;min-width:150px}
+.state{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:8px;
+  background:#0e0b07;border:1px solid var(--line);color:var(--mut)}
+.state.ok{color:#1a1204;background:linear-gradient(180deg,#7fe0ac,var(--ok));border-color:#2c7a52}
+.state.due{color:#2a0d07;background:linear-gradient(180deg,#ff9c8b,var(--bad));border-color:#9c3a2c}
+.btn{
+  font-family:var(--disp);font-weight:700;font-size:13px;color:#1a1204;
+  background:linear-gradient(180deg,#ffd873,var(--am));border:1px solid #8a5f0a;border-radius:12px;
+  padding:11px 16px;cursor:pointer;box-shadow:0 4px 0 #6b4a06,0 8px 14px rgba(240,164,24,.25);
+  transition:transform .1s,box-shadow .1s;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #6b4a06}
+.btn.undo{background:linear-gradient(180deg,#ffb3a4,var(--bad));border-color:#9c3a2c;box-shadow:0 4px 0 #7a2c20,0 8px 14px rgba(255,107,87,.25);color:#2a0d07}
+.spot{
+  font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink);
+  display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border-radius:12px;
+  background:linear-gradient(165deg,#26201568,#1d1810);border:1px solid var(--line);cursor:pointer;
+  box-shadow:0 3px 0 #0c0a06;transition:transform .1s;
+}
+.spot:active{transform:translateY(2px);box-shadow:0 1px 0 #0c0a06}
+.spot.hit{color:#06130c;background:linear-gradient(180deg,#7fe0ac,var(--ok));border-color:#2c7a52;box-shadow:0 3px 0 #1e5c3c}
+.vrow{display:flex;gap:8px;flex-wrap:wrap}
+.vrow input{
+  flex:1;min-width:110px;font-family:var(--mono);font-size:13px;color:var(--ink);
+  background:#0e0b07;border:1px solid var(--line);border-radius:10px;padding:11px 12px;
+  box-shadow:inset 0 3px 6px rgba(0,0,0,.6);
+}
+.vrow input::placeholder{color:#5c5342}
+.vhist{list-style:none;margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--mut)}
+.vhist li{display:flex;gap:10px;padding:6px 8px;border-bottom:1px dashed var(--line)}
+.vhist li.hi{color:var(--bad);font-weight:700}
+/* details */
+details{margin-bottom:14px;border:1px solid var(--line);border-radius:16px;overflow:hidden;
+  background:linear-gradient(165deg,#1e1910,#17130c);box-shadow:0 3px 0 #0c0a06,0 12px 20px -10px rgba(0,0,0,.6)}
+summary{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--mut);padding:14px 16px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
+summary::before{content:"▸";color:var(--am);transition:transform .2s}
+details[open] summary::before{transform:rotate(90deg)}
+details .inner{padding:0 16px 14px}
+.rules li{margin:0 0 8px 18px;font-size:13.5px;color:var(--ink)}
+.rules li b{color:var(--am)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips span{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:9px;
+  background:#0e0b07;border:1px solid var(--line);color:var(--mut)}
+.stock b{display:block;font-family:var(--disp);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin:10px 0 4px}
+.stock p{font-size:13px;color:var(--mut)}
+footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5px;color:#5c5342}
+@media(hover:hover){
+  .it:hover{border-color:#6b4f14;transform:translateY(-1px)}
+  .btn:hover,#startBtn:hover{filter:brightness(1.06)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
 </style>
 </head>
 <body>
-
-<header class="top">
-  <div class="top-in">
-    <div class="top-row">
-      <h1>Protocol</h1>
-      <span class="phase" id="phase">AM</span>
-      <span class="d" id="date"></span>
-    </div>
-    <div class="meter">
-      <div class="bar"><i id="bar"></i></div>
-      <b><span id="done">0</span><small>/36</small></b>
-    </div>
-    <nav class="tabs" role="tablist">
-      <button id="t-am" class="on" role="tab" aria-selected="true">Morning</button>
-      <button id="t-pm" role="tab" aria-selected="false">Evening</button>
-      <button id="t-rh" role="tab" aria-selected="false">Rhythm</button>
-    </nav>
+<div class="scene">
+<header>
+  <div class="hrow">
+    <h1>Proto<em>col</em></h1>
+    <span class="chip" id="ph">AM</span>
+    <span class="hdate" id="dt"></span>
   </div>
+  <div class="pmeter"><div class="pbar"><div class="pfill" id="pfill"></div></div><span class="pnum" id="pnum">0/37</span></div>
+  <nav class="tabs" role="tablist">
+    <button id="t-am" role="tab" aria-selected="true">Morning</button>
+    <button id="t-pm" role="tab" aria-selected="false">Evening</button>
+    <button id="t-rh" role="tab" aria-selected="false">Rhythm</button>
+  </nav>
 </header>
 
-<main class="wrap">
-
-  <!-- ═══ MORNING ═══ -->
-  <section class="panel on" id="p-am">
-
-    <div class="cyc" id="cyc">
-      <div class="l">Cycle tracker</div>
-      <div class="big" id="cycBig">set start date</div>
-      <div class="sub" id="cycSub">52-week run · 6-week oral window</div>
-      <button id="startBtn" type="button" hidden>START RUN</button>
+<section class="panel on" id="p-am" role="tabpanel">
+  <div class="card tilt" id="cyc">
+    <div class="cycBig" id="cycBig">READY</div>
+    <div class="cycSub" id="cycSub">nothing logs until the run begins</div>
+    <div class="cycRow">
       <input type="date" id="cycStart" aria-label="cycle start date">
+      <button id="startBtn" hidden>START RUN</button>
     </div>
+  </div>
 
-    <div class="grp"><h2>Organ armor</h2><span>5</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">TUDCA</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">NAC</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Vitamin C</div><div class="ds">500 mg</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Omega-3</div><div class="ds">2 g · EPA-skew rTAG</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">CoQ10</div><div class="ds">100 mg · solubilized</div></span><span class="cat">ARM</span></label>
-    </ul>
+  <div class="grp"><h3>Organ armor</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">TUDCA</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">NAC</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Vitamin C</span><span class="ds">500 mg</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Omega-3</span><span class="ds">2 g · rTAG</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">CoQ10</span><span class="ds">100 mg</span></span><span class="cat">ARM</span></label>
+  </ul></div>
 
-    <div class="grp"><h2>Pharma wing</h2><span>6</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Nebivolol</div><div class="ds">5 mg</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Telmisartan</div><div class="ds">80 mg</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Eplerenone</div><div class="ds">25 mg</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Empagliflozin</div><div class="ds">12.5 mg · ½ tab</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Ezetimibe</div><div class="ds">10 mg</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Rosuvastatin</div><div class="ds">10 mg</div></span><span class="cat">PHR</span></label>
-    </ul>
+  <div class="grp"><h3>Pharma wing</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Nebivolol</span><span class="ds">5 mg</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Telmisartan</span><span class="ds">80 mg</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Eplerenone</span><span class="ds">25 mg</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Empagliflozin</span><span class="ds">12.5 mg · ½ tab</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Ezetimibe</span><span class="ds">10 mg</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Rosuvastatin</span><span class="ds">10 mg</span></span><span class="cat">PHR</span></label>
+  </ul></div>
 
-    <div class="grp"><h2>Androgens</h2><span>5</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Testosterone E</div><div class="ds">12.5 mg · IM</div></span><span class="cat">AND</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Trenbolone E</div><div class="ds">30 mg · IM</div></span><span class="cat">AND</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Masteron E</div><div class="ds">40 mg · IM</div></span><span class="cat">AND</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Anadrol</div><div class="ds">50 mg</div></span><span class="tag hot">6 wk</span><span class="cat">AND</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Tamoxifen</div><div class="ds">20 mg</div></span><span class="tag hot">6 wk</span><span class="cat">AND</span></label>
-    </ul>
+  <div class="grp"><h3>Androgens</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Testosterone E</span><span class="ds">12.5 mg · IM</span></span><span class="cat">AND</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Trenbolone E</span><span class="ds">30 mg · IM</span></span><span class="cat">AND</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Masteron E</span><span class="ds">40 mg · IM</span></span><span class="cat">AND</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Anadrol</span><span class="ds">50 mg · 6-week window</span></span><span class="cat">6WK</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Tamoxifen</span><span class="ds">20 mg · 6-week window</span></span><span class="cat">6WK</span></label>
+  </ul></div>
 
-    <div class="grp"><h2>Support</h2><span>9</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">D3 / K2</div><div class="ds">½ tab</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Multivitamin</div><div class="ds">1 cap</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Magnesium</div><div class="ds">2 caps</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Citicoline</div><div class="ds">500 mg</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Memantine</div><div class="ds">5 mg · ½ tab</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Tadalafil</div><div class="ds">10 mg · ½ tab</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Cardarine</div><div class="ds">10 mg</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Abaloparatide</div><div class="ds">100 µg · SC</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Cialis window note</div><div class="ds">NAD+ & Aromasin → Rhythm tab</div></span><span class="cat">SUP</span></label>
-    </ul>
-  </section>
+  <div class="grp"><h3>Support</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">D3 / K2</span><span class="ds">½ tab</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Multivitamin</span><span class="ds">1 cap</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Magnesium</span><span class="ds">2 caps</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Citicoline</span><span class="ds">500 mg</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Memantine</span><span class="ds">5 mg · ½ tab</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Tadalafil</span><span class="ds">10 mg · ½ tab</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Cardarine</span><span class="ds">10 mg</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Abaloparatide</span><span class="ds">100 µg · SC</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Aromasin · NAD+ · Caber</span><span class="ds">Rhythm tab →</span></span><span class="cat">RHY</span></label>
+  </ul></div>
+</section>
 
-  <!-- ═══ EVENING ═══ -->
-  <section class="panel" id="p-pm">
-    <div class="grp" style="margin-top:16px"><h2>Organ armor</h2><span>4</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">TUDCA</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">NAC</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Omega-3</div><div class="ds">2 g</div></span><span class="cat">ARM</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Magnesium</div><div class="ds">1 cap</div></span><span class="cat">ARM</span></label>
-    </ul>
+<section class="panel" id="p-pm" role="tabpanel">
+  <div class="grp"><h3>Organ armor</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">TUDCA</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">NAC</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Omega-3</span><span class="ds">2 g · rTAG</span></span><span class="cat">ARM</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Magnesium</span><span class="ds">1 cap</span></span><span class="cat">ARM</span></label>
+  </ul></div>
+  <div class="grp"><h3>Pharma</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Empagliflozin</span><span class="ds">12.5 mg · ½ tab</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">LDN</span><span class="ds">3 mg</span></span><span class="cat">PHR</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Clonidine</span><span class="ds">100 µg</span></span><span class="cat">PHR</span></label>
+  </ul></div>
+  <div class="grp"><h3>Peptides &amp; hormones</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">GHK-Cu · BPC-157 · TB-500</span><span class="ds">SC</span></span><span class="cat">PEP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">HGH</span><span class="ds">15 IU</span></span><span class="cat">PEP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Lantus</span><span class="ds">5 IU · if needed + meter</span></span><span class="cat">PEP</span></label>
+  </ul></div>
+  <div class="grp"><h3>Support</h3><ul>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Melatonin</span><span class="ds">20 mg</span></span><span class="cat">SUP</span></label>
+    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Ashwagandha</span><span class="ds">500 mg</span></span><span class="cat">SUP</span></label>
+  </ul></div>
+</section>
 
-    <div class="grp"><h2>Pharma wing</h2><span>3</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Empagliflozin</div><div class="ds">12.5 mg · ½ tab</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">LDN</div><div class="ds">3 mg</div></span><span class="cat">PHR</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Clonidine</div><div class="ds">100 µg</div></span><span class="cat">PHR</span></label>
-    </ul>
-
-    <div class="grp"><h2>Peptides & hormones</h2><span>3</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">GHK-Cu · BPC-157 · TB-500</div><div class="ds">SC</div></span><span class="cat">PEP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">HGH</div><div class="ds">15 IU</div></span><span class="cat">PEP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Lantus</div><div class="ds">5 IU</div></span><span class="tag">if needed + meter</span><span class="cat">PEP</span></label>
-    </ul>
-
-    <div class="grp"><h2>Support</h2><span>2</span></div>
-    <ul class="items">
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Melatonin</div><div class="ds">20 mg</div></span><span class="cat">SUP</span></label>
-      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Ashwagandha</div><div class="ds">500 mg</div></span><span class="cat">SUP</span></label>
-    </ul>
-  </section>
-
-  <!-- ═══ RHYTHM ═══ -->
-  <section class="panel" id="p-rh" style="padding-top:16px">
+<section class="panel" id="p-rh" role="tabpanel">
+  <div class="grp"><h3>Rhythm</h3>
     <div class="cad" id="cadE3D">
-      <div class="top-l"><h3>Aromasin</h3><span class="st" id="e3dSt">—</span></div>
-      <p>6.25 mg · ¼ tab · every 3rd day</p>
-      <button class="act" id="e3dBtn">Log dose</button>
+      <span class="tx"><span class="nm">Aromasin</span><span class="ds">6.25 mg · ¼ tab · every 3rd day</span></span>
+      <span class="state" id="e3dSt">—</span>
+      <button class="btn" id="e3dBtn">Log dose</button>
     </div>
     <div class="cad" id="cadCab">
-      <div class="top-l"><h3>Cabergoline</h3><span class="st" id="cabSt">—</span></div>
-      <p>0.25 mg · 2× weekly · with food (e.g. Mon + Thu)</p>
-      <button class="act" id="cabBtn">Log dose</button>
+      <span class="tx"><span class="nm">Cabergoline</span><span class="ds">0.25 mg · 2× weekly · with food</span></span>
+      <span class="state" id="cabSt">—</span>
+      <button class="btn" id="cabBtn">Log dose</button>
     </div>
     <div class="cad" id="cadNad">
-      <div class="top-l"><h3>NAD+</h3><span class="st" id="nadSt">—</span></div>
-      <p>100 mg · SC · once weekly</p>
-      <button class="act" id="nadBtn">Log dose</button>
+      <span class="tx"><span class="nm">NAD+</span><span class="ds">100 mg · SC · weekly</span></span>
+      <span class="state" id="nadSt">—</span>
+      <button class="btn" id="nadBtn">Log dose</button>
     </div>
-    <div class="cad" id="vit">
-      <style>
-        .vrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-        .vrow input{flex:1 1 40%;min-width:120px;padding:10px;border:1.5px solid #111;border-radius:8px;font:600 15px Inter,sans-serif;background:#fff}
-        .vhist{list-style:none;margin:10px 0 0;padding:0;font:12px/1.7 ui-monospace,monospace;color:#333}
-        .vhist li{border-top:1px solid #eee;padding:4px 0}
-        .vhist li.hi{color:#b3261e;font-weight:700}
-      </style>
-      <div class="top-l"><h3>Vitals log</h3><span class="st ok">daily</span></div>
-      <p>Glucose mg/dL (fasted) · BP sys/dia · saved on this device</p>
-      <div class="vrow">
-        <input type="number" id="vGlu" placeholder="glucose mg/dL" inputmode="numeric" aria-label="glucose mg per dL">
-        <input type="text" id="vBp" placeholder="BP 120/80" inputmode="numeric" aria-label="blood pressure systolic slash diastolic">
-        <button class="act" id="vBtn">Log</button>
-      </div>
-      <ul class="vhist" id="vHist"></ul>
-    </div>
-    <div class="cad" id="imRot">
-      <style>
-        #imList{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-        .spot{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border:1.5px solid #111;border-radius:10px;background:#fff;font:600 14px Inter,sans-serif;text-align:left;cursor:pointer;width:100%}
-        .spot span{color:#555;font:12px ui-monospace,monospace}
-        .spot.hit{background:#111;color:#fff}
-        .spot.hit span{color:#bbb}
-      </style>
-      <div class="top-l"><h3>IM rotation</h3><span class="st" id="imSt">—</span></div>
-      <p>3 daily injections · 4 sites · shoulders + glutes · tap to log</p>
-      <div id="imList"></div>
-    </div>
-  </section>
+  </div>
 
-  <!-- ═══ START GATE (inline in cycle card) ═══ -->
+  <div class="card tilt" id="imRot">
+    <h3>IM rotation</h3>
+    <div class="cycSub" id="imSt" style="margin-bottom:10px">—</div>
+    <div id="imList"></div>
+  </div>
 
-  <!-- ═══ REFERENCE ═══ -->
-  <details>
-    <summary>Standing rules</summary>
-    <ul class="rules">
-      <li><b>Insulin</b> — 0 IU default. Lantus opens only if fasting glucose trends &gt;110–120 mg/dL. First dose 2–3 IU, meter after.</li>
-      <li><b>Thyroid</b> — zero. TSH 1.72 / fT3 3.06 euthyroid. EUTHYROX + CYTOMEL sealed reserve.</li>
-      <li><b>Carbs</b> — 350 g/day, starch &gt; sugar, biggest portions around training.</li>
-      <li><b>Uric acid 8.2</b> — hydration 2.5–3 L + VitC 500 + citrate first. ZYRIK only if &gt;8.5–9 or flare, never during a flare.</li>
-      <li><b>Cabergoline</b> — replaced prami (weekly lever, less D3 texture). PRL draw before first dose = referee. Taper on exit, never cold-stop.</li>
-      <li><b>Not in stack</b> — P5P · NACET · milk thistle · lemborexant · anastrozole (aromasin stock = 3+ yrs).</li>
-    </ul>
-  </details>
-  <details>
-    <summary>Labs · monitoring</summary>
-    <div class="chips">
-      <span class="chip">Hct monthly</span><span class="chip">LFTs wk 3</span><span class="chip">K⁺</span>
-      <span class="chip">E2 sensitive</span><span class="chip">PRL baseline</span><span class="chip">IGF-1</span>
-      <span class="chip">Lipids apoB</span><span class="chip">Glucose</span><span class="chip">Uric acid</span>
-      <span class="chip">GLS echo</span><span class="chip">Next draw: TSH fT4 ALT GGT ferritin 25-OH-D</span>
+  <div class="card tilt" id="vit">
+    <h3>Vitals</h3>
+    <div class="vrow">
+      <input id="vGlu" type="number" inputmode="numeric" placeholder="glucose mg/dL">
+      <input id="vBp" type="text" placeholder="BP 120/80">
+      <button class="btn" id="vBtn">Log</button>
     </div>
-  </details>
-  <details>
-    <summary>Stock</summary>
-    <div class="stock">
-      <h4>Home</h4>
-      <ul class="stock">
-        <li>Tamoxifen ✓ · Cardarine 170 ✓ · Tadalafil ~340 days ✓ · Aromasin 3+ yrs ✓ · Melatonin ~200 d ✓ · NAC 200</li>
-      </ul>
-      <h4>Local</h4>
-      <ul class="stock">
-        <li>TUDCA · citrate powder · glucose meter + ketone strips · BP cuff · pill splitter</li>
-      </ul>
-      <h4>Drawer — only if labs say</h4>
-      <ul class="stock">
-        <li>LUPI hCG · CLOMIDE (PCT) · EUTHYROX + CYTOMEL (sealed) · ZYRIK (threshold)</li>
-      </ul>
-    </div>
-  </details>
+    <ul class="vhist" id="vHist"></ul>
+  </div>
+</section>
 
-  <footer>Checked boxes reset at midnight · saved on this device</footer>
-</main>
+<details><summary>Standing rules</summary><div class="inner"><ul class="rules">
+  <li><b>Insulin 0 IU default</b> — Lantus opens only if fasting glucose trends >110–120 mg/dL on the meter (GH insulin resistance breaking through empa). First-ever dose 2–3 IU, meter check after.</li>
+  <li><b>Thyroid zero</b> — TSH 1.72 / fT3 3.06 euthyroid. Euthyrox + Cytomel stay sealed reserve.</li>
+  <li><b>350 g carbs/day</b> — starch over sugar (fructose drives uric acid), biggest portions around training. DKA protection with empa + GH.</li>
+  <li><b>Uric acid 8.2</b> — first line hydration 2.5–3 L + vitamin C + citrate. ZYRIK only if it stays >8.5–9 or a flare hits; never start during a flare.</li>
+  <li><b>Cabergoline replaced prami</b> — 0.25 mg 2×/weekly, PRL draw before first dose is the referee. Taper on exit, never cold-stop.</li>
+  <li><b>Not in stack</b> — P5P, NACET, milk thistle, lemborexant, anastrozole (3-year aromasin stock, Rule 3).</li>
+</ul></div></details>
+
+<details><summary>Labs</summary><div class="inner"><div class="chips">
+  <span>Hct monthly</span><span>LFTs wk 3</span><span>K⁺</span><span>sensitive E2</span><span>PRL</span><span>IGF-1</span><span>lipids</span><span>fasting glucose</span><span>uric acid</span><span>GLS echo</span><span>next draw: TSH · fT4 · ALT/AST/GGT · ferritin · 25(OH)D</span>
+</div></div></details>
+
+<details><summary>Stock</summary><div class="inner stock">
+  <b>Home</b><p>Tamoxifen · Cardarine 170×10 · Tadalafil ~170×20 · Aromasin 96×25 (3+ y) · Melatonin 4 g (~200 d) · NAC 200</p>
+  <b>Local</b><p>TUDCA · citrate powder · glucose meter + ketone strips · BP cuff · pill splitter · Omega-3 · Mg · D3/K2 · multi · CoQ10 · ashwagandha</p>
+  <b>Drawer</b><p>LUPI hCG (Rule 7) · Dostiheal reserve · Clomide (PCT) · Euthyrox + Cytomel (sealed)</p>
+</div></details>
+
+<footer>checks reset at midnight · saved on this device</footer>
+</div>
 
 <script>
 (function(){
-  var $ = function(id){ return document.getElementById(id); };
-  var KEY = 'proto-v4';
+'use strict';
+var KEY='proto-v4', VKEY='proto-vitals';
+var $=function(s){return document.querySelector(s)};
+var now=new Date();
+var isAM=now.getHours()<15;
 
-  /* date + phase */
-  var now = new Date();
-  $('date').textContent = now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
-  var hr = now.getHours();
-  var isAM = hr < 15;
-  $('phase').textContent = isAM ? 'AM' : 'PM';
-  document.body.classList.toggle('pm', !isAM);
+function tab(tid,pid){
+  ['t-am','t-pm','t-rh'].forEach(function(t){$('#'+t).setAttribute('aria-selected',t===tid?'true':'false')});
+  ['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('on',p===pid)});
+}
+$('#t-am').onclick=function(){tab('t-am','p-am')};
+$('#t-pm').onclick=function(){tab('t-pm','p-pm')};
+$('#t-rh').onclick=function(){tab('t-rh','p-rh')};
 
-  /* tabs */
-  function tab(id, panel){
-    ['t-am','t-pm','t-rh'].forEach(function(t){ $(t).classList.remove('on'); $(t).setAttribute('aria-selected','false'); });
-    ['p-am','p-pm','p-rh'].forEach(function(p){ $(p).classList.remove('on'); });
-    $(id).classList.add('on'); $(id).setAttribute('aria-selected','true');
-    $(panel).classList.add('on');
+function fresh(){return {day:now.toDateString(),checked:[],e3d:null,cab:[],nad:[],start:null,im:[]}}
+function load(){
+  var s; try{s=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){s={}}
+  if(!s.day||s.day!==now.toDateString()){
+    s={day:now.toDateString(),checked:[],e3d:s.e3d||null,cab:s.cab||[],nad:s.nad||[],start:s.start||null,im:[]};
   }
-  $('t-am').onclick = function(){ tab('t-am','p-am'); };
-  $('t-pm').onclick = function(){ tab('t-pm','p-pm'); };
-  $('t-rh').onclick = function(){ tab('t-rh','p-rh'); };
+  if(!s.im)s.im=[];
+  return s;
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+var S=load();
+if(!isAM && S.start) tab('t-pm','p-pm');
 
-  /* state */
-  function load(){
-    try{
-      var s = JSON.parse(localStorage.getItem(KEY) || '{}');
-      if(s.day !== now.toDateString()) return {day:now.toDateString(), checked:[], e3d:null, cab:[], nad:[], im:[], start:null};
-      if(!s.im) s.im = [];
-      return s;
-    }catch(e){ return {day:now.toDateString(), checked:[], e3d:null, cab:[], nad:[], im:[], start:null}; }
-  }
-  function save(){ localStorage.setItem(KEY, JSON.stringify(S)); }
-  var S = load();
-  if(S.day !== now.toDateString()){ S = {day:now.toDateString(), checked:[], e3d:S.e3d||null, cab:[], nad:[], im:[], start:S.start||null}; save(); }
-  if(!isAM && S.start) tab('t-pm','p-pm');
+/* phase chip + date */
+function phPaint(){
+  $('#ph').textContent=isAM?'AM':'PM';
+  document.body.classList.toggle('pm',!isAM);
+  $('#dt').textContent=now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+}
+phPaint();
 
-  /* keep start date across days */
-  $('cycStart').value = S.start || '';
-  $('cycStart').onchange = function(){ S.start = this.value; save(); cyc(); };
-
-  /* cycle tracker */
-  function cyc(){
-    if(!S.start){ $('cycBig').textContent = 'READY'; $('cycSub').textContent = 'nothing logs until the run begins'; $('startBtn').hidden = false; return; }
-    $('startBtn').hidden = true;
-    var d0 = new Date(S.start + 'T00:00:00');
-    var days = Math.floor((now - d0) / 86400000);
-    if(days < 0){ $('cycBig').innerHTML = 'starts in ' + (-days) + ' <small>days</small>'; $('cycSub').textContent = '52-week run · 6-week oral window'; return; }
-    var wk = Math.floor(days/7) + 1;
-    var runWk = wk > 52 ? 52 : wk;
-    var sub = 'day ' + (days+1) + ' · week ' + wk + ' of 52';
-    if(days < 42){ sub += ' · <span class="hot">oral window: day ' + (days+1) + '/42</span>'; }
-    else { sub += ' · oral window closed'; }
-    $('cycBig').innerHTML = 'week ' + runWk + ' <small>/ 52</small>';
-    $('cycSub').innerHTML = sub;
-  }
-  cyc();
-
-  /* daily items */
-  var items = document.querySelectorAll('#p-am .it, #p-pm .it');
-  var TOTAL = items.length;
-  function paint(){
-    var n = S.checked.length;
-    $('done').textContent = n;
-    $('bar').style.width = (n/TOTAL*100) + '%';
-  }
-  function idx(el){ return Array.prototype.indexOf.call(items, el); }
-  function toggle(el){
-    if(!S.start) return;
-    var i = idx(el);
-    if(i < 0) return;
-    var cb = el.querySelector('.cbx');
-    var pos = S.checked.indexOf(i);
-    if(pos >= 0){ S.checked.splice(pos,1); el.classList.remove('done'); cb.checked = false; }
-    else { S.checked.push(i); el.classList.add('done'); cb.checked = true; }
-    save(); paint();
-  }
-  Array.prototype.forEach.call(items, function(el, i){
-    var cb = el.querySelector('.cbx');
-    cb.checked = S.checked.indexOf(i) >= 0;
-    if(cb.checked) el.classList.add('done');
-    cb.addEventListener('change', function(){ toggle(el); });
+/* items */
+var items=[].slice.call(document.querySelectorAll('.it input.cbx'));
+var TOTAL=items.length;
+function paint(){
+  var n=S.checked.length, pct=TOTAL?Math.round(n/TOTAL*100):0;
+  $('#pnum').textContent=n+'/'+TOTAL;
+  $('#pfill').style.width=pct+'%';
+}
+items.forEach(function(cb,i){
+  cb.checked=S.checked.indexOf(i)>-1;
+  cb.addEventListener('change',function(){
+    if(!S.start){cb.checked=false;return}
+    var k=S.checked.indexOf(i);
+    if(cb.checked&&k<0)S.checked.push(i);
+    if(!cb.checked&&k>-1)S.checked.splice(k,1);
+    save();paint();
   });
-  paint();
+});
 
-  /* rhythm — E3D */
-  var DAY = 86400000;
-  function e3d(){
-    var st = $('e3dSt');
-    if(!S.e3d){ st.textContent = 'no data'; st.className = 'st wait'; return; }
-    var age = Math.floor((now - new Date(S.e3d)) / DAY);
-    if(age === 0){ st.textContent = 'done today'; st.className = 'st ok'; }
-    else if(age >= 3){ st.textContent = 'due today'; st.className = 'st due'; }
-    else { st.textContent = 'day ' + age + '/3'; st.className = 'st wait'; }
+/* cycle tracker */
+function cyc(){
+  var big=$('#cycBig'),sub=$('#cycSub'),btn=$('#startBtn');
+  if(!S.start){
+    big.textContent='READY';btn.hidden=false;
+    sub.textContent='nothing logs until the run begins';
+    return;
   }
-  $('e3dBtn').onclick = function(){ if(!S.start) return;
-    if(S.e3d && Math.floor((now - new Date(S.e3d)) / DAY) === 0){ S.e3d = null; }
-    else { S.e3d = now.toISOString(); }
-    save(); e3d(); btnTxt();
-  };
-  function todayIn(arr){ return arr.some(function(x){ return new Date(x).toDateString() === now.toDateString(); }); }
-  function rmToday(arr){ for(var i = arr.length - 1; i >= 0; i--){ if(new Date(arr[i]).toDateString() === now.toDateString()){ arr.splice(i,1); return; } } }
-  function btnTxt(){
-    $('e3dBtn').textContent = (S.e3d && Math.floor((now - new Date(S.e3d)) / DAY) === 0) ? 'Undo today' : 'Log dose';
-    $('cabBtn').textContent = todayIn(S.cab) ? 'Undo today' : 'Log dose';
-    $('nadBtn').textContent = todayIn(S.nad) ? 'Undo today' : 'Log dose';
-  }
+  btn.hidden=true;
+  var d1=new Date(S.start+'T00:00:00');
+  var day=Math.floor((new Date().setHours(0,0,0,0)-d1)/864e5)+1;
+  if(day<1)day=1;
+  var wk=Math.ceil(day/7); if(wk>52)wk=52;
+  big.textContent='week '+wk+' / 52';
+  var oral=day<=42?' · oral window: <span class="hot">day '+day+'/42</span>':' · oral window: closed';
+  sub.innerHTML='day '+day+' · week '+wk+' of 52'+oral;
+}
+$('#cycStart').addEventListener('change',function(){
+  if(this.value){S.start=this.value;save();cyc();impaint();locks()}
+});
+$('#startBtn').onclick=function(){
+  var n=new Date();
+  S.start=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+  save();$('#cycStart').value=S.start;cyc();impaint();locks();
+};
+function locks(){
+  var on=!S.start;
+  ['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('locked',on)});
+}
 
-  /* rhythm — weekly counters (ISO week key) */
-  function wkKey(d){ var d2 = new Date(d); d2.setHours(0,0,0,0); d2.setDate(d2.getDate() + 3 - ((d2.getDay()+6)%7)); var w1 = new Date(d2.getFullYear(),0,4); return d2.getFullYear() + '-W' + (1 + Math.round(((d2 - w1)/86400000 - 3 + ((w1.getDay()+6)%7))/7)); }
-  function weekly(arr, goal, stEl){
-    var k = wkKey(now);
-    var n = arr.filter(function(x){ return wkKey(x) === k; }).length;
-    var st = $(stEl);
-    if(n >= goal){ st.textContent = goal + '/' + goal + ' this wk'; st.className = 'st ok'; }
-    else { st.textContent = n + '/' + goal + ' this wk'; st.className = 'st due'; }
-  }
-  $('cabBtn').onclick = function(){ if(!S.start) return; if(todayIn(S.cab)) rmToday(S.cab); else S.cab.push(now.toISOString()); save(); weekly(S.cab,2,'cabSt'); btnTxt(); };
-  $('nadBtn').onclick = function(){ if(!S.start) return; if(todayIn(S.nad)) rmToday(S.nad); else S.nad.push(now.toISOString()); save(); weekly(S.nad,1,'nadSt'); btnTxt(); };
+/* cadence */
+function e3dAge(){if(!S.e3d)return 99;return Math.floor((Date.now()-S.e3d)/864e5)}
+function btnTxt(){
+  $('#e3dBtn').textContent=e3dAge()===0?'Undo today':'Log dose';
+  $('#e3dBtn').classList.toggle('undo',e3dAge()===0);
+  $('#cabBtn').textContent=todayIn(S.cab)?'Undo today':'Log dose';
+  $('#cabBtn').classList.toggle('undo',todayIn(S.cab));
+  $('#nadBtn').textContent=todayIn(S.nad)?'Undo today':'Log dose';
+  $('#nadBtn').classList.toggle('undo',todayIn(S.nad));
+}
+function dstr(t){var d=new Date(t);return d.toDateString()}
+function todayIn(a){return a.some(function(t){return dstr(t)===new Date().toDateString()})}
+function rmToday(a){return a.filter(function(t){return dstr(t)!==new Date().toDateString()})}
+function wkKey(t){var d=new Date(t);var o=new Date(d.getFullYear(),0,1);return d.getFullYear()+'w'+Math.ceil(((d-o)/864e5+o.getDay()+1)/7)}
+function e3d(){
+  var a=e3dAge(),st=$('#e3dSt');
+  if(a===0){st.textContent='done today';st.className='state ok'}
+  else if(a>=3){st.textContent='due';st.className='state due'}
+  else{st.textContent='day '+a+'/3';st.className='state'}
+}
+function weekly(arr,goal,el){
+  var k=wkKey(Date.now()),n=arr.filter(function(t){return wkKey(t)===k}).length;
+  el.textContent=n+'/'+goal+' this wk';
+  el.className='state'+(n>=goal?' ok':'');
+}
+$('#e3dBtn').onclick=function(){if(!S.start)return;S.e3d=e3dAge()===0?null:Date.now();save();e3d();btnTxt()};
+$('#cabBtn').onclick=function(){if(!S.start)return;S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save();weekly(S.cab,2,$('#cabSt'));btnTxt()};
+$('#nadBtn').onclick=function(){if(!S.start)return;S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save();weekly(S.nad,1,$('#nadSt'));btnTxt()};
 
-  e3d(); weekly(S.cab,2,'cabSt'); weekly(S.nad,1,'nadSt'); btnTxt();
+/* IM rotation */
+var SPOTS=['L shoulder','R shoulder','L glute','R glute'];
+var IMS=['Testosterone E 12.5 mg','Trenbolone E 30 mg','Masteron E 40 mg'];
+function imDay(){if(!S.start)return null;var d1=new Date(S.start+'T00:00:00');return Math.floor((new Date().setHours(0,0,0,0)-d1)/864e5)}
+function impaint(){
+  var list=$('#imList'),st=$('#imSt');
+  var day=imDay();
+  if(day===null){st.textContent='starts with the run';list.innerHTML='';return}
+  var ok=S.im.filter(function(v){return v}).length;
+  st.textContent=ok+'/3 logged · rotation day '+(day+1);
+  list.innerHTML='';
+  IMS.forEach(function(nm,k){
+    var b=document.createElement('button');
+    b.className='spot'+(S.im[k]?' hit':'');
+    b.textContent=nm+' → '+SPOTS[(day+k)%4];
+    b.onclick=function(){if(!S.start)return;S.im[k]=!S.im[k];save();impaint()};
+    list.appendChild(b);
+  });
+}
 
-  /* IM rotation — 4 sites, 3 daily injections, day-keyed */
-  var SPOTS = ['L shoulder','R shoulder','L glute','R glute'];
-  function imDay(){
-    if(!S.start) return null;
-    var d0 = new Date(S.start + 'T00:00:00');
-    return Math.max(0, Math.floor((now - d0) / 86400000));
-  }
-  function impaint(){
-    var d = imDay(), wrap = $('imList'), st = $('imSt');
-    if(d === null){ wrap.innerHTML = '<p style="margin:10px 0 0;font:13px Inter,sans-serif;color:#777">set start date first</p>'; st.textContent = '—'; st.className = 'st wait'; return; }
-    var names = ['Testosterone E 12.5','Trenbolone E 30','Masteron E 40'];
-    wrap.innerHTML = '';
-    names.forEach(function(nm, k){
-      var spot = SPOTS[(d + k) % 4];
-      var row = document.createElement('button');
-      row.type = 'button';
-      row.className = 'spot' + (S.im.indexOf(k) >= 0 ? ' hit' : '');
-      row.innerHTML = '<b>' + nm + ' mg</b><span>&rarr; ' + spot + '</span>';
-      row.onclick = function(){ if(!S.start) return;
-        var p = S.im.indexOf(k);
-        if(p >= 0) S.im.splice(p,1); else S.im.push(k);
-        save(); impaint();
-      };
-      wrap.appendChild(row);
+/* vitals — persists across midnight */
+function vload(){try{return JSON.parse(localStorage.getItem(VKEY)||'[]')}catch(e){return[]}}
+function vpaint(){
+  var h=$('#vHist'),v=vload();
+  h.innerHTML='';
+  v.slice(-5).reverse().forEach(function(e){
+    var li=document.createElement('li');
+    li.textContent=e.d+'  ·  glucose '+(e.g||'—')+'  ·  '+(e.b||'—');
+    if(typeof e.g==='number'&&e.g>110)li.className='hi';
+    h.appendChild(li);
+  });
+}
+$('#vBtn').onclick=function(){
+  if(!S.start)return;
+  var v=vload(),g=$('#vGlu').value,b=$('#vBp').value;
+  if(!g&&!b)return;
+  v.push({d:new Date().toLocaleDateString(undefined,{month:'short',day:'numeric'}),g:g?+g:null,b:b||null});
+  if(v.length>90)v=v.slice(-90);
+  localStorage.setItem(VKEY,JSON.stringify(v));
+  $('#vGlu').value='';$('#vBp').value='';vpaint();
+};
+
+/* 3D tilt — pointer-follow on cards, skipped pre-start-safe */
+var tiltOK=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(tiltOK&&window.matchMedia('(hover:hover)').matches){
+  document.querySelectorAll('.tilt').forEach(function(el){
+    el.addEventListener('pointermove',function(e){
+      var r=el.getBoundingClientRect();
+      var x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      el.style.transform='perspective(900px) rotateX('+(1.2-y*6)+'deg) rotateY('+(x*6)+'deg)';
     });
-    st.textContent = S.im.length + '/3 logged';
-    st.className = S.im.length >= 3 ? 'st ok' : 'st due';
-  }
+    el.addEventListener('pointerleave',function(){el.style.transform='';});
+  });
+}
 
-  /* start button — inline in cycle card */
-  $('startBtn').onclick = function(){
-    var y = now.getFullYear(), m = ('0' + (now.getMonth() + 1)).slice(-2), dd = ('0' + now.getDate()).slice(-2);
-    S.start = y + '-' + m + '-' + dd;
-    save(); $('cycStart').value = S.start; cyc(); impaint(); locks();
-  };
-  function locks(){
-    var locked = !S.start;
-    Array.prototype.forEach.call(document.querySelectorAll('.panel'), function(p){
-      p.classList.toggle('locked', locked);
-    });
-  }
-  locks(); impaint();
-
-  /* vitals — persistent history (survives midnight reset) */
-  var VKEY = 'proto-vitals';
-  function vload(){ try{ return JSON.parse(localStorage.getItem(VKEY)||'[]'); }catch(e){ return []; } }
-  var V = vload();
-  function vpaint(){
-    var ul = $('vHist'); ul.innerHTML = '';
-    V.slice(-5).reverse().forEach(function(x){
-      var li = document.createElement('li');
-      li.textContent = x.d + ' — glu ' + x.g + ' mg/dL · BP ' + x.b;
-      if(typeof x.g === 'number' && x.g > 110) li.className = 'hi';
-      ul.appendChild(li);
-    });
-  }
-  $('vBtn').onclick = function(){
-    if(!S.start) return;
-    var g = $('vGlu').value.trim(), b = $('vBp').value.trim();
-    if(!g && !b) return;
-    var gn = parseInt(g,10);
-    V.push({d: now.toLocaleDateString(undefined,{month:'short',day:'numeric'}), g: isNaN(gn)?'—':gn, b: b||'—'});
-    if(V.length > 90) V = V.slice(-90);
-    localStorage.setItem(VKEY, JSON.stringify(V));
-    $('vGlu').value=''; $('vBp').value='';
-    vpaint();
-  };
-  vpaint();
+/* init */
+cyc();locks();impaint();paint();e3d();weekly(S.cab,2,$('#cabSt'));weekly(S.nad,1,$('#nadSt'));btnTxt();vpaint();
 })();
 </script>
 </body>
