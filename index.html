@@ -54,8 +54,9 @@ ul{list-style:none}
 .it.done .nm{text-decoration:line-through;opacity:.45}
 .box svg path{stroke:#fff;stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
 .tx{flex:1;min-width:0}
-.nm{font:600 14.5px Inter,sans-serif}
-.ds{font:11.5px 'JetBrains Mono',monospace;color:var(--mut);margin-top:1px}
+.nm{font:600 14.5px Inter,sans-serif;display:block;margin-bottom:3px}
+.ds{font:11.5px 'JetBrains Mono',monospace;color:var(--mut);display:block}
+.note{font:10.5px 'JetBrains Mono',monospace;color:var(--mut);opacity:.75;display:block;margin-top:3px;padding-top:3px;border-top:1px dashed var(--line)}
 .cat{flex:0 0 auto;font:700 9.5px 'JetBrains Mono',monospace;letter-spacing:.5px;color:var(--mut);background:var(--card2);border:1px solid var(--line);padding:4px 7px;border-radius:7px}
 .it.off{opacity:.42;pointer-events:none}
 .it.off .ds{font-style:italic}
@@ -191,6 +192,7 @@ footer{margin-top:20px;text-align:center;font:10.5px 'JetBrains Mono',monospace;
   <div class="grab"></div>
   <label for="fName">Name</label><input id="fName" autocomplete="off">
   <label for="fDose">Dose</label><input id="fDose" autocomplete="off">
+  <label for="fDesc">Description</label><input id="fDesc" autocomplete="off" placeholder="optional note">
   <label for="fPanel">List</label>
   <select id="fPanel"><option value="am">Morning</option><option value="pm">Evening</option></select>
   <label for="fGroup">Group</label>
@@ -231,7 +233,7 @@ return [
  {id:'w3',n:'Masteron E',d:'40 mg · IM',p:'am',g:'Androgens'},
  {id:'w4',n:'Anadrol',d:'50 mg',p:'am',g:'Androgens',t:'w6'},
  {id:'w5',n:'Tamoxifen',d:'20 mg',p:'am',g:'Androgens',t:'w6'},
- {id:'d1',n:'D3 / K2',d:'½ tab',p:'am',g:'Support'},
+ {id:'d1',n:'D3 + K2',d:'1 cap · 125 µg D3 (5 000 IE) + 200 µg K2',o:'one capsule = full daily dose of both — titrate via 25(OH)D 40–60 ng/mL at next bloods',p:'am',g:'Support'},
  {id:'m1',n:'Multivitamin',d:'1 cap',p:'am',g:'Support'},
  {id:'m2',n:'Magnesium',d:'2 caps',p:'am',g:'Support'},
  {id:'i1',n:'Citicoline',d:'500 mg',p:'am',g:'Support'},
@@ -286,7 +288,7 @@ function rowHtml(it){
   return '<label class="'+cls+'" data-id="'+it.id+'">'+
     '<input type="checkbox" '+(S.checked.indexOf(it.id)>=0?'checked':'')+' aria-label="'+esc(it.n)+'">'+
     '<span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 7"/></svg></span>'+
-    '<span class="tx"><span class="nm">'+esc(it.n)+'</span><span class="ds" id="ds-'+it.id+'">'+esc(it.d)+'</span></span>'+
+    '<span class="tx"><span class="nm">'+esc(it.n)+'</span><span class="ds" id="ds-'+it.id+'">'+esc(it.d)+'</span>'+(it.o?'<span class="note">'+esc(it.o)+'</span>':'')+'</span>'+
     tag+usr+cat+
     '<span class="ebtn" role="button" aria-label="edit">✎</span><span class="xbtn" role="button" aria-label="delete">✕</span></label>';
 }
@@ -372,7 +374,7 @@ function cadPaint(){
 var editing=null,addP=null,addG=null,delArm=false;
 function openSheet(it,p,g){
   editing=it;addP=p||null;addG=g||null;delArm=false;
-  $('#fName').value=it?it.n:'';$('#fDose').value=it?it.d:'';
+  $('#fName').value=it?it.n:'';$('#fDose').value=it?it.d:'';$('#fDesc').value=it&&it.o?it.o:'';
   $('#fPanel').value=it?it.p:(p||'am');$('#fGroup').value=it?it.g:(g||'Support');
   $('#fGroup').innerHTML=GROUPS.map(function(x){return '<option'+(x===(it?it.g:(g||'Support'))?' selected':'')+'>'+x+'</option>'}).join('');
   var del=$('#sDel');del.style.display=it?'block':'none';del.classList.remove('sure');del.textContent='Delete';
@@ -390,8 +392,9 @@ $('#sDel').addEventListener('click',function(){
 $('#sSave').addEventListener('click',function(){
   var n=$('#fName').value.trim(),d=$('#fDose').value.trim()||'—';
   if(!n){toast('name is empty');return}
-  if(editing){editing.n=n;editing.d=d;editing.p=$('#fPanel').value;editing.g=$('#fGroup').value}
-  else{var id='u'+Date.now().toString(36);S.items.push({id:id,n:n,d:d,p:$('#fPanel').value,g:$('#fGroup').value,usr:true})}
+  var o=$('#fDesc').value.trim();
+  if(editing){editing.n=n;editing.d=d;editing.o=o||undefined;editing.p=$('#fPanel').value;editing.g=$('#fGroup').value}
+  else{var id='u'+Date.now().toString(36);S.items.push({id:id,n:n,d:d,o:o||undefined,p:$('#fPanel').value,g:$('#fGroup').value,usr:true})}
   save();render();closeSheet();toast(editing?'saved':'added');
 });
 
