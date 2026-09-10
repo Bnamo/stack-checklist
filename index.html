@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STACK — Daily Protocol</title>
+<style>
+  :root{
+    --ink:#111111;
+    --paper:#ffffff;
+    --rule:#e4e4e4;
+    --dim:#6b6b6b;
+    --amber:#8a6d1a;
+    --blue:#1f4fa8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    font-size:15px;
+    line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:720px;margin:0 auto;padding:48px 20px 96px}
+  header{border-bottom:2px solid var(--ink);padding-bottom:16px;margin-bottom:8px}
+  h1{font-size:22px;font-weight:700;letter-spacing:-0.02em}
+  .sub{display:flex;justify-content:space-between;align-items:baseline;margin-top:6px;
+       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px;color:var(--dim)}
+  .phase{font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.08em}
+  .phase.am{color:var(--amber)}
+  .phase.pm{color:var(--blue)}
+  .meta{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--dim);
+        border-bottom:1px solid var(--rule);padding:8px 0;display:flex;gap:18px;flex-wrap:wrap}
+  .meta b{color:var(--ink);font-weight:600}
+  h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+     margin:40px 0 4px;display:flex;align-items:baseline;gap:12px}
+  h2 .count{font-family:ui-monospace,Menlo,monospace;font-weight:400;color:var(--dim);font-size:11px;letter-spacing:0}
+  h2.am-h{color:var(--amber)} h2.pm-h{color:var(--blue)}
+  .rule{height:1px;background:var(--rule)}
+  .bar{height:2px;background:var(--rule);position:relative;margin-bottom:10px}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink);width:0;transition:width .2s}
+  .bar.am-h + .bar i, section.am .bar i{background:var(--amber)}
+  section.pm .bar i{background:var(--blue)}
+  h3{font-family:ui-monospace,Menlo,monospace;font-size:11px;font-weight:600;color:var(--dim);
+     text-transform:uppercase;letter-spacing:.1em;margin:22px 0 6px}
+  ul.items{list-style:none}
+  ul.items li{display:flex;align-items:baseline;gap:10px;padding:7px 0;border-bottom:1px solid var(--rule)}
+  ul.items li .box{flex:0 0 auto;width:14px;height:14px;border:1.5px solid var(--ink);
+     appearance:none;cursor:pointer;position:relative;top:2px;background:#fff}
+  ul.items li .box:checked::after{content:"";position:absolute;inset:2px;background:var(--ink)}
+  ul.items li label{flex:1;cursor:pointer;display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+  .name{font-weight:500}
+  .dose{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--dim);white-space:nowrap}
+  li.done .name, li.done .dose{text-decoration:line-through;color:#b5b5b5}
+  .tag{display:inline-block;font-family:ui-monospace,Menlo,monospace;font-size:10px;
+       border:1px solid var(--ink);padding:1px 6px;margin-left:8px;letter-spacing:.04em;vertical-align:1px}
+  .tag.warn{border-color:var(--amber);color:var(--amber)}
+  .tag.if{border-color:var(--dim);color:var(--dim)}
+  .notes{margin-top:40px}
+  .notes h2{margin-bottom:10px}
+  .nlist li{padding:6px 0;border-bottom:1px solid var(--rule);font-size:13.5px;color:#333}
+  .nlist b{font-weight:600}
+  .badges{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+  .badge{font-family:ui-monospace,Menlo,monospace;font-size:10.5px;border:1px solid var(--ink);
+         padding:3px 8px;letter-spacing:.03em}
+  .stock{margin-top:26px}
+  .stock table{width:100%;border-collapse:collapse;font-size:13px}
+  .stock td{padding:5px 8px 5px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+  .stock td:first-child{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--dim);
+        text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;padding-top:7px}
+  footer{margin-top:56px;border-top:2px solid var(--ink);padding-top:10px;
+         font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--dim);
+         display:flex;justify-content:space-between}
+  @media(max-width:520px){
+    ul.items li label{flex-direction:column;gap:0}
+    .dose{white-space:normal}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Daily Protocol</h1>
+  <div class="sub">
+    <span id="date">—</span>
+    <span>checked today: <b id="done-count">0</b> / <span id="total-count">0</span></span>
+    <span class="phase" id="phase">—</span>
+  </div>
+</header>
+
+<div class="meta">
+  <span>insulin: <b>0 IU default</b></span>
+  <span>thyroid: <b>0 — sealed</b></span>
+  <span>carbs: <b>350 g/day</b></span>
+  <span>anadrol + tamoxifen: <b>first 6 wk only</b></span>
+</div>
+
+<section class="am" id="am">
+<h2 class="am-h">Morning <span class="count" id="am-count"></span></h2>
+<div class="bar"><i id="am-bar"></i></div>
+<div class="rule"></div>
+
+<h3>Organ armor</h3>
+<ul class="items" data-group="am">
+  <li><input type="checkbox" class="box" id="a0"><label for="a0"><span class="name">TUDCA</span><span class="dose">600 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a1"><label for="a1"><span class="name">NAC</span><span class="dose">600 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a2"><label for="a2"><span class="name">Vitamin C</span><span class="dose">500 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a3"><label for="a3"><span class="name">Omega-3</span><span class="dose">2 g</span></label></li>
+  <li><input type="checkbox" class="box" id="a4"><label for="a4"><span class="name">CoQ10</span><span class="dose">100 mg</span></label></li>
+</ul>
+
+<h3>Pharma wing</h3>
+<ul class="items" data-group="am">
+  <li><input type="checkbox" class="box" id="a5"><label for="a5"><span class="name">Nebivolol</span><span class="dose">5 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a6"><label for="a6"><span class="name">Telmisartan</span><span class="dose">80 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a7"><label for="a7"><span class="name">Eplerenone</span><span class="dose">25 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a8"><label for="a8"><span class="name">Empagliflozin</span><span class="dose">12.5 mg · ½ tab</span></label></li>
+  <li><input type="checkbox" class="box" id="a9"><label for="a9"><span class="name">Ezetimibe</span><span class="dose">10 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a10"><label for="a10"><span class="name">Rosuvastatin</span><span class="dose">10 mg</span></label></li>
+</ul>
+
+<h3>Androgens</h3>
+<ul class="items" data-group="am">
+  <li><input type="checkbox" class="box" id="a11"><label for="a11"><span class="name">Testosterone E</span><span class="dose">12.5 mg · IM</span></label></li>
+  <li><input type="checkbox" class="box" id="a12"><label for="a12"><span class="name">Trenbolone E</span><span class="dose">30 mg · IM</span></label></li>
+  <li><input type="checkbox" class="box" id="a13"><label for="a13"><span class="name">Masteron E</span><span class="dose">40 mg · IM</span></label></li>
+  <li><input type="checkbox" class="box" id="a14"><label for="a14"><span class="name">Anadrol</span><span class="dose">50 mg</span><span class="tag warn">6 wk only</span></label></li>
+  <li><input type="checkbox" class="box" id="a15"><label for="a15"><span class="name">Tamoxifen</span><span class="dose">20 mg</span><span class="tag warn">6 wk only</span></label></li>
+  <li><input type="checkbox" class="box" id="a16"><label for="a16"><span class="name">Aromasin</span><span class="dose">6.25 mg · ¼ tab · E3D</span></label></li>
+</ul>
+
+<h3>Support</h3>
+<ul class="items" data-group="am">
+  <li><input type="checkbox" class="box" id="a17"><label for="a17"><span class="name">D3 / K2</span><span class="dose">½ tab</span></label></li>
+  <li><input type="checkbox" class="box" id="a18"><label for="a18"><span class="name">Multivitamin</span><span class="dose">1 cap</span></label></li>
+  <li><input type="checkbox" class="box" id="a19"><label for="a19"><span class="name">Magnesium</span><span class="dose">2 caps</span></label></li>
+  <li><input type="checkbox" class="box" id="a20"><label for="a20"><span class="name">Citicoline</span><span class="dose">500 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a21"><label for="a21"><span class="name">Memantine</span><span class="dose">5 mg · ½ tab</span></label></li>
+  <li><input type="checkbox" class="box" id="a22"><label for="a22"><span class="name">Tadalafil</span><span class="dose">10 mg · ½ tab</span></label></li>
+  <li><input type="checkbox" class="box" id="a23"><label for="a23"><span class="name">Cardarine</span><span class="dose">10 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="a24"><label for="a24"><span class="name">Abaloparatide</span><span class="dose">100 µg · SC</span></label></li>
+  <li><input type="checkbox" class="box" id="a25"><label for="a25"><span class="name">NAD+</span><span class="dose">100 mg · weekly</span></label></li>
+</ul>
+</section>
+
+<section class="pm" id="pm">
+<h2 class="pm-h">Evening <span class="count" id="pm-count"></span></h2>
+<div class="bar"><i id="pm-bar"></i></div>
+<div class="rule"></div>
+
+<h3>Organ armor</h3>
+<ul class="items" data-group="pm">
+  <li><input type="checkbox" class="box" id="p0"><label for="p0"><span class="name">TUDCA</span><span class="dose">600 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="p1"><label for="p1"><span class="name">NAC</span><span class="dose">600 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="p2"><label for="p2"><span class="name">Omega-3</span><span class="dose">2 g</span></label></li>
+  <li><input type="checkbox" class="box" id="p3"><label for="p3"><span class="name">Magnesium</span><span class="dose">1 cap</span></label></li>
+</ul>
+
+<h3>Pharma wing</h3>
+<ul class="items" data-group="pm">
+  <li><input type="checkbox" class="box" id="p4"><label for="p4"><span class="name">Empagliflozin</span><span class="dose">12.5 mg · ½ tab</span></label></li>
+  <li><input type="checkbox" class="box" id="p5"><label for="p5"><span class="name">LDN</span><span class="dose">3 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="p6"><label for="p6"><span class="name">Clonidine</span><span class="dose">100 µg</span></label></li>
+</ul>
+
+<h3>Peptides &amp; hormones</h3>
+<ul class="items" data-group="pm">
+  <li><input type="checkbox" class="box" id="p7"><label for="p7"><span class="name">GHK-Cu · BPC-157 · TB-500</span><span class="dose">SC</span></label></li>
+  <li><input type="checkbox" class="box" id="p8"><label for="p8"><span class="name">HGH</span><span class="dose">15 IU</span></label></li>
+  <li><input type="checkbox" class="box" id="p9"><label for="p9"><span class="name">Lantus</span><span class="dose">5 IU</span><span class="tag if">if needed · meter</span></label></li>
+</ul>
+
+<h3>Support</h3>
+<ul class="items" data-group="pm">
+  <li><input type="checkbox" class="box" id="p10"><label for="p10"><span class="name">Pramipexole</span><span class="dose">0.25 mg</span><span class="tag if">PRL draw decides</span></label></li>
+  <li><input type="checkbox" class="box" id="p11"><label for="p11"><span class="name">Melatonin</span><span class="dose">20 mg</span></label></li>
+  <li><input type="checkbox" class="box" id="p12"><label for="p12"><span class="name">Ashwagandha</span><span class="dose">500 mg</span></label></li>
+</ul>
+</section>
+
+<div class="notes">
+<h2>Standing rules</h2>
+<div class="rule"></div>
+<ul class="items nlist" style="list-style:none">
+  <li><b>Insulin default 0 IU</b> — opens only if fasting glucose trends &gt;110–120 mg/dL; first dose 2–3 IU, meter after, 5 IU ceiling.</li>
+  <li><b>Thyroid zero</b> — TSH 1.72 / fT3 3.06 euthyroid; EUTHYROX + CYTOMEL stay sealed reserve.</li>
+  <li><b>Carbs 350 g/day</b> — starch over sugar (fructose feeds uric acid), biggest portions around training; DKA protection.</li>
+  <li><b>Uric acid 8.2</b> — first line hydration 2.5–3 L + VitC + citrate; ZYRIK only if &gt;8.5–9 or flare.</li>
+  <li><b>Prami</b> — lever real but no target on tren (PRL lore dead); PRL draw in next bloods decides; 4× rebound on withdrawal.</li>
+  <li><b>Not in stack</b> — NACET, milk thistle, lemborexant, P5P (B6 covered by multi).</li>
+</ul>
+
+<div class="badges">
+  <span class="badge">Hkt monthly</span>
+  <span class="badge">LFTs wk 3</span>
+  <span class="badge">K⁺</span>
+  <span class="badge">E2 sens</span>
+  <span class="badge">PRL</span>
+  <span class="badge">IGF-1</span>
+  <span class="badge">lipids</span>
+  <span class="badge">glucose</span>
+  <span class="badge">uric acid</span>
+  <span class="badge">GLS echo</span>
+  <span class="badge">next draw: TSH · fT4 · ALT · GGT · IGF-1 · ferritin · 25(OH)D</span>
+</div>
+
+<div class="stock">
+<h2>Stock</h2>
+<div class="rule"></div>
+<table>
+  <tr><td>home</td><td>tamoxifen · cardarine 170×10 · tadalafil ~170×20 · aromasin 96×25 (3+ yr) · melatonin 4 g · NAC 200</td></tr>
+  <tr><td>local</td><td>TUDCA · citrate powder · glucose meter + ketone strips · BP cuff · pill splitter · omega-3 · D3/K2 · multi · Mg · CoQ10 · ashwagandha</td></tr>
+  <tr><td>drawer</td><td>LUPI hCG · DOSTIHEAL · CLOMIDE · EUTHYROX + CYTOMEL (sealed)</td></tr>
+</table>
+</div>
+</div>
+
+<footer>
+  <span>checklist resets at midnight</span>
+  <span>progress saved locally</span>
+</footer>
+</div>
+
+<script>
+(function(){
+  var boxes = document.querySelectorAll(".box");
+  var amBoxes = document.querySelectorAll("#am .box");
+  var pmBoxes = document.querySelectorAll("#pm .box");
+  var KEY = "stack-checks";
+
+  function today(){ return new Date().toDateString(); }
+
+  function load(){
+    try{
+      var s = JSON.parse(localStorage.getItem(KEY) || "{}");
+      if(s.day !== today()){ s = {day: today(), checked: []}; localStorage.setItem(KEY, JSON.stringify(s)); }
+      return s;
+    }catch(e){ return {day: today(), checked: []}; }
+  }
+
+  function paint(){
+    var s = load();
+    boxes.forEach(function(b, i){
+      b.checked = s.checked.indexOf(i) !== -1;
+      b.closest("li").classList.toggle("done", b.checked);
+    });
+    function pct(list){
+      if(!list.length) return 0;
+      var d = 0; list.forEach(function(b){ if(b.checked) d++; });
+      return Math.round(100 * d / list.length);
+    }
+    document.getElementById("am-bar").style.width = pct(amBoxes) + "%";
+    document.getElementById("pm-bar").style.width = pct(pmBoxes) + "%";
+    document.getElementById("am-count").textContent = pct(amBoxes) + "%";
+    document.getElementById("pm-count").textContent = pct(pmBoxes) + "%";
+    var all = 0, done = 0;
+    boxes.forEach(function(b){ all++; if(b.checked) done++; });
+    document.getElementById("done-count").textContent = done;
+    document.getElementById("total-count").textContent = all;
+  }
+
+  boxes.forEach(function(b, i){
+    b.addEventListener("change", function(){
+      var s = load();
+      var idx = s.checked.indexOf(i);
+      if(b.checked && idx === -1) s.checked.push(i);
+      if(!b.checked && idx !== -1) s.checked.splice(idx, 1);
+      localStorage.setItem(KEY, JSON.stringify(s));
+      paint();
+    });
+  });
+
+  var h = new Date().getHours();
+  var ph = document.getElementById("phase");
+  ph.textContent = h < 15 ? "AM window" : "PM window";
+  ph.classList.add(h < 15 ? "am" : "pm");
+  document.getElementById("date").textContent = new Date().toLocaleDateString(undefined,
+    {weekday:"short", year:"numeric", month:"short", day:"numeric"});
+
+  paint();
+})();
+</script>
+</body>
+</html>
