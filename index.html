@@ -1,221 +1,120 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Protocol</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0a08; --bg2:#14110c; --card:#1b1712; --card2:#221d15;
-  --ink:#f2ede3; --mut:#a89e8c; --line:#332b1f;
-  --am:#f0a418; --am2:#c47f0a; --ind:#7f96ff;
-  --ok:#4ec98a; --bad:#ff6b57;
-  --mono:'JetBrains Mono',monospace; --disp:'Manrope',sans-serif; --body:'Inter',sans-serif;
+  --bg:#0b0a08; --card:#171410; --card2:#1e1a14; --line:#2b261d;
+  --ink:#f2ede4; --mut:#9a917f; --amber:#f0a832; --amber2:#ffca6b;
+  --indigo:#7a8cff; --ok:#4ade80; --warn:#ff6b5e; --teal:#3fd6c0;
+  --r:16px; --shadow:0 10px 30px rgba(0,0,0,.45), 0 2px 6px rgba(0,0,0,.5);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}
-body{
-  background:
-    radial-gradient(1200px 500px at 50% -100px,#2a2113 0%,transparent 60%),
-    radial-gradient(900px 600px at 110% 110%,#191308 0%,transparent 55%),
-    var(--bg);
-  color:var(--ink); font-family:var(--body); font-size:16px; line-height:1.5;
-  min-height:100dvh; overflow-x:hidden;
-}
-.scene{perspective:1400px; perspective-origin:50% 0%; max-width:560px; margin:0 auto; padding:0 14px 90px;}
-/* ---------- header ---------- */
-header{
-  position:sticky; top:0; z-index:40; margin:0 -14px; padding:14px 18px 12px;
-  background:linear-gradient(180deg,rgba(11,10,8,.96),rgba(11,10,8,.82));
-  backdrop-filter:blur(14px); border-bottom:1px solid var(--line);
-
-}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);background-image:radial-gradient(900px 500px at 85% -10%,rgba(240,168,50,.07),transparent 60%),radial-gradient(700px 500px at -10% 30%,rgba(122,140,255,.05),transparent 60%);color:var(--ink);font:16px/1.5 Inter,sans-serif;min-height:100vh}
+.scene{max-width:560px;margin:0 auto;padding:0 14px 90px}
+header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,rgba(11,10,8,.96),rgba(11,10,8,.88) 80%,transparent);backdrop-filter:blur(10px);padding:14px 2px 10px}
 .hrow{display:flex;align-items:center;gap:10px}
-h1{
-  font-family:var(--disp); font-weight:800; font-size:26px; letter-spacing:-.5px;
-  color:var(--ink);
-  text-shadow:0 1px 0 #4d3c12,0 2px 0 #3a2d0c,0 3px 0 #2a2008,0 6px 14px rgba(240,164,24,.28);
-}
-h1 em{font-style:normal;color:var(--am)}
-.chip{
-  font-family:var(--mono); font-size:11px; font-weight:700; letter-spacing:.08em;
-  padding:5px 10px; border-radius:999px; text-transform:uppercase;
-  background:linear-gradient(180deg,#3d2f10,#2a2008); color:var(--am);
-  border:1px solid #5b4514; box-shadow:0 2px 0 #1a1305,inset 0 1px 0 rgba(255,220,140,.25);
-}
-body.pm .chip{background:linear-gradient(180deg,#232a4d,#161b33);color:var(--ind);border-color:#39437a;box-shadow:0 2px 0 #0e1123,inset 0 1px 0 rgba(170,190,255,.25)}
-.hdate{font-family:var(--mono);font-size:11px;color:var(--mut);margin-left:auto;text-align:right}
-/* progress */
-.pmeter{margin-top:12px; display:flex; align-items:center; gap:10px}
-.pbar{flex:1; height:16px; border-radius:999px; background:#0e0b07; border:1px solid var(--line);
-  box-shadow:inset 0 3px 6px rgba(0,0,0,.7); overflow:hidden; position:relative}
-.pfill{
-  height:100%; width:0%; border-radius:999px;
-  background:linear-gradient(180deg,#ffd270,var(--am) 45%,var(--am2));
-  box-shadow:0 0 12px rgba(240,164,24,.5),inset 0 1px 0 rgba(255,255,255,.4);
-  transition:width .5s cubic-bezier(.22,1,.36,1);
-}
-.pnum{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--am);min-width:52px;text-align:right}
-body.pm .pfill{background:linear-gradient(180deg,#b9c8ff,var(--ind) 45%,#4a5fb8);box-shadow:0 0 12px rgba(127,150,255,.5),inset 0 1px 0 rgba(255,255,255,.4)}
-body.pm .pnum{color:var(--ind)}
-/* tabs */
-.tabs{display:flex;gap:8px;margin-top:12px}
-.tabs button{
-  flex:1; font-family:var(--disp); font-weight:700; font-size:14px; letter-spacing:.02em;
-  padding:12px 8px; border-radius:14px; color:var(--mut); background:linear-gradient(180deg,#241e14,#17130c);
-  border:1px solid var(--line); cursor:pointer;
-  box-shadow:0 4px 0 #0a0805,0 8px 16px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.06);
-  transition:transform .12s,box-shadow .12s,color .12s;
-}
-.tabs button:active{transform:translateY(3px);box-shadow:0 1px 0 #0a0805,0 3px 8px rgba(0,0,0,.5)}
-.tabs button[aria-selected="true"]{
-  color:#1a1204; background:linear-gradient(180deg,#ffd873,var(--am));
-  border-color:#8a5f0a; box-shadow:0 4px 0 #6b4a06,0 10px 20px rgba(240,164,24,.35),inset 0 1px 0 rgba(255,255,255,.5);
-}
-/* ---------- panels & cards ---------- */
-.panel{display:none;padding-top:16px}
+h1{font:800 26px/1 Manrope,sans-serif;letter-spacing:-.5px;text-shadow:0 1px 0 #000,0 2px 4px rgba(0,0,0,.6),0 3px 8px rgba(240,168,50,.12)}
+h1 em{font-style:normal;color:var(--amber)}
+#ph{font:700 11px/1 JetBrains Mono,monospace;padding:6px 9px;border-radius:8px;background:#241c0d;color:var(--amber2);border:1px solid #3d2f14;white-space:nowrap}
+body.pm #ph{background:#161a2e;color:#a9b6ff;border-color:#2a3160}
+#dt{margin-left:auto;font:600 11px/1.3 JetBrains Mono,monospace;color:var(--mut);text-align:right}
+.pmeter{margin-top:10px;display:flex;align-items:center;gap:10px}
+.pbar{flex:1;height:12px;border-radius:8px;background:#060503;box-shadow:inset 0 2px 5px rgba(0,0,0,.9),0 1px 0 rgba(255,255,255,.04);overflow:hidden}
+#pfill{height:100%;width:0%;border-radius:8px;background:linear-gradient(180deg,var(--amber2),var(--amber));box-shadow:0 0 12px rgba(240,168,50,.55);transition:width .5s cubic-bezier(.34,1.3,.64,1)}
+body.pm #pfill{background:linear-gradient(180deg,#9aa8ff,var(--indigo));box-shadow:0 0 12px rgba(122,140,255,.55)}
+#pnum{font:700 13px/1 JetBrains Mono,monospace;color:var(--mut);min-width:52px;text-align:right}
+nav{display:flex;gap:8px;margin-top:12px}
+nav button{flex:1;font:700 13px/1 Manrope,sans-serif;color:var(--ink);background:linear-gradient(180deg,#2a251c,#191510);border:1px solid #3a332a;border-bottom:4px solid #000;border-radius:12px;padding:12px 0;cursor:pointer;transition:transform .06s,filter .15s}
+nav button:active{transform:translateY(3px);border-bottom-width:1px}
+nav button[aria-selected="true"]{background:linear-gradient(180deg,#3d3423,#241d12);border-color:var(--amber);color:var(--amber2);filter:drop-shadow(0 0 8px rgba(240,168,50,.25))}
+.panel{display:none;padding-top:14px}
 .panel.on{display:block}
-.panel.locked .it,.panel.locked .cad,.panel.locked .spot,.panel.locked .vrow{opacity:.4;pointer-events:none;filter:saturate(.4)}
-.tilt{transform-style:preserve-3d;will-change:transform}
-.card{
-  background:linear-gradient(165deg,var(--card2),var(--card) 55%);
-  border:1px solid var(--line); border-radius:20px; padding:16px; margin-bottom:16px;
-  box-shadow:0 1px 0 rgba(255,235,190,.07) inset,0 18px 30px -14px rgba(0,0,0,.85),0 34px 60px -30px rgba(0,0,0,.6);
-
-}
-.card h3{
-  font-family:var(--disp);font-weight:800;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);
-  margin-bottom:10px; display:flex; align-items:center; gap:8px;
-}
-.card h3::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--am);box-shadow:0 0 10px rgba(240,164,24,.7);transform:rotate(45deg)}
-/* cycle card */
-#cyc{border-color:#5b4514;background:linear-gradient(165deg,#2d2210,#1a1409 60%)}
-#cyc .cycBig{
-  font-family:var(--disp);font-weight:800;font-size:34px;letter-spacing:-1px;color:var(--am);
-  text-shadow:0 2px 0 #3a2a08,0 4px 0 #241a04,0 10px 24px rgba(240,164,24,.35);
-}
-#cyc .cycSub{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:4px}
-#cyc .hot{color:var(--bad);font-weight:700}
-.cycRow{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
-#cycStart{
-  font-family:var(--mono);font-size:13px;color:var(--ink);background:#0e0b07;border:1px solid var(--line);
-  border-radius:10px;padding:10px 12px; box-shadow:inset 0 3px 6px rgba(0,0,0,.6);
-}
-#startBtn{
-  font-family:var(--disp);font-weight:800;font-size:16px;letter-spacing:.06em;color:#1a1204;
-  background:linear-gradient(180deg,#ffd873,#f0a418 60%,#d18c0b);
-  border:1px solid #8a5f0a;border-radius:14px;padding:13px 26px;cursor:pointer;width:100%;
-  box-shadow:0 6px 0 #6b4a06,0 14px 26px rgba(240,164,24,.35),inset 0 1px 0 rgba(255,255,255,.55);
-  transition:transform .1s,box-shadow .1s;
-}
-#startBtn:active{transform:translateY(4px);box-shadow:0 2px 0 #6b4a06,0 6px 14px rgba(240,164,24,.3)}
-/* items */
-.grp{margin-bottom:18px}
-.it.off{opacity:.4;pointer-events:none}
-.it.cad2 input{position:absolute;opacity:0;width:1px;height:1px}
-.it.cad2.on .box{background:#e5a83c;border-color:#e5a83c}
+.panel.locked .it,.panel.locked .cadrow,.panel.locked .spot,.panel.locked .vrow{opacity:.38;pointer-events:none}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+#cyc .big{font:800 30px/1.1 Manrope,sans-serif;letter-spacing:-.5px}
+#cyc .big .hot{color:var(--warn)}
+#cyc .sub{color:var(--mut);font:600 12px/1.5 JetBrains Mono,monospace;margin-top:6px}
+#cyc input[type=date]{margin-top:10px;background:#0d0b08;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;font:600 13px JetBrains Mono,monospace}
+#startBtn{display:block;width:100%;margin-top:12px;font:800 17px/1 Manrope,sans-serif;color:#1a1206;background:linear-gradient(180deg,var(--amber2),var(--amber));border:1px solid #b47f1e;border-bottom:6px solid #7a550f;border-radius:14px;padding:16px 0;cursor:pointer;text-shadow:0 1px 0 rgba(255,255,255,.3);transition:transform .06s}
+#startBtn:active{transform:translateY(4px);border-bottom-width:2px}
+h3{font:800 12px/1 Manrope,sans-serif;text-transform:uppercase;letter-spacing:2px;color:var(--mut);margin:20px 2px 10px}
+h3 b{color:var(--amber)}body.pm h3 b{color:var(--indigo)}
 ul{list-style:none}
-.it{
-  display:flex;align-items:center;gap:12px;padding:13px 14px;margin-bottom:9px;border-radius:16px;
-  background:linear-gradient(165deg,#26201568,#1d1810); border:1px solid var(--line); cursor:pointer;
-  box-shadow:0 3px 0 #0c0a06,0 8px 16px -6px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,240,200,.05);
-  transition:transform .14s,box-shadow .14s,border-color .2s; position:relative; min-height:56px;
-  transform-style:preserve-3d;
-}
-.it:active{transform:translateY(2px);box-shadow:0 1px 0 #0c0a06,0 4px 10px -4px rgba(0,0,0,.6)}
+.it{display:flex;align-items:center;gap:12px;background:linear-gradient(180deg,#201c15,#171410);border:1px solid var(--line);border-radius:13px;padding:12px 14px;margin-bottom:8px;cursor:pointer;position:relative;transition:transform .06s;min-height:56px;transform-style:preserve-3d}
+.it:active{transform:scale(.985)}
 .it input{position:absolute;opacity:0;width:1px;height:1px}
-.box{
-  width:30px;height:30px;flex:0 0 30px;border-radius:10px;position:relative;
-  background:linear-gradient(180deg,#171209,#0e0b06);border:1.5px solid #4a3a16;
-  box-shadow:0 3px 0 #080604,inset 0 1px 0 rgba(255,220,140,.12);
-  transition:transform .35s cubic-bezier(.34,1.56,.64,1),background .2s,border-color .2s;
-  transform-style:preserve-3d;
-}
-.box svg{position:absolute;inset:0;margin:auto;width:18px;height:18px;opacity:0;transform:rotateY(90deg) scale(.4);transition:all .3s .05s cubic-bezier(.34,1.56,.64,1)}
-.it input:checked~.box{background:linear-gradient(180deg,#ffd873,var(--am));border-color:#8a5f0a;transform:rotateY(180deg) scale(1.06)}
-.it input:checked~.box svg{opacity:1;transform:rotateY(180deg) scale(1)}
-.it input:focus-visible~.box{outline:2px solid var(--am);outline-offset:2px}
-.tx{flex:1;display:flex;flex-direction:column;gap:1px}
-.nm{font-family:var(--disp);font-weight:700;font-size:15px;transition:color .2s}
-.ds{font-family:var(--mono);font-size:12px;color:var(--mut)}
-.cat{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.1em;color:var(--mut);
-  border:1px solid var(--line);border-radius:6px;padding:2px 6px;align-self:flex-start;background:#0e0b07}
-.it:has(input:checked){border-color:#6b4f14;background:linear-gradient(165deg,#33270f22,#1d1810)}
-.it:has(input:checked) .nm{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--am2);text-decoration-thickness:2px}
-/* cadence / vitals / IM cards */
-.cad{display:flex;align-items:center;gap:12px;padding:14px;border-radius:16px;margin-bottom:10px;
-  background:linear-gradient(165deg,#26201568,#1d1810);border:1px solid var(--line);
-  box-shadow:0 3px 0 #0c0a06,0 10px 18px -8px rgba(0,0,0,.6);flex-wrap:wrap}
-.cad .tx{flex:1;min-width:150px}
-.state{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:8px;
-  background:#0e0b07;border:1px solid var(--line);color:var(--mut)}
-.state.ok{color:#1a1204;background:linear-gradient(180deg,#7fe0ac,var(--ok));border-color:#2c7a52}
-.state.due{color:#2a0d07;background:linear-gradient(180deg,#ff9c8b,var(--bad));border-color:#9c3a2c}
-.btn{
-  font-family:var(--disp);font-weight:700;font-size:13px;color:#1a1204;
-  background:linear-gradient(180deg,#ffd873,var(--am));border:1px solid #8a5f0a;border-radius:12px;
-  padding:11px 16px;cursor:pointer;box-shadow:0 4px 0 #6b4a06,0 8px 14px rgba(240,164,24,.25);
-  transition:transform .1s,box-shadow .1s;
-}
-.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #6b4a06}
-.btn.undo{background:linear-gradient(180deg,#ffb3a4,var(--bad));border-color:#9c3a2c;box-shadow:0 4px 0 #7a2c20,0 8px 14px rgba(255,107,87,.25);color:#2a0d07}
-.spot{
-  font-family:var(--mono);font-size:12px;font-weight:700;color:var(--ink);
-  display:block;width:100%;text-align:left;padding:12px 14px;margin-bottom:8px;border-radius:12px;
-  background:linear-gradient(165deg,#26201568,#1d1810);border:1px solid var(--line);cursor:pointer;
-  box-shadow:0 3px 0 #0c0a06;transition:transform .1s;
-}
-.spot:active{transform:translateY(2px);box-shadow:0 1px 0 #0c0a06}
-.spot.hit{color:#06130c;background:linear-gradient(180deg,#7fe0ac,var(--ok));border-color:#2c7a52;box-shadow:0 3px 0 #1e5c3c}
-.vrow{display:flex;gap:8px;flex-wrap:wrap}
-.vrow input{
-  flex:1;min-width:110px;font-family:var(--mono);font-size:13px;color:var(--ink);
-  background:#0e0b07;border:1px solid var(--line);border-radius:10px;padding:11px 12px;
-  box-shadow:inset 0 3px 6px rgba(0,0,0,.6);
-}
-.vrow input::placeholder{color:#5c5342}
-.vhist{list-style:none;margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--mut)}
-.vhist li{display:flex;gap:10px;padding:6px 8px;border-bottom:1px dashed var(--line)}
-.vhist li.hi{color:var(--bad);font-weight:700}
-/* details */
-details{margin-bottom:14px;border:1px solid var(--line);border-radius:16px;overflow:hidden;
-  background:linear-gradient(165deg,#1e1910,#17130c);box-shadow:0 3px 0 #0c0a06,0 12px 20px -10px rgba(0,0,0,.6)}
-summary{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--mut);padding:14px 16px;cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px}
-summary::before{content:"▸";color:var(--am);transition:transform .2s}
-details[open] summary::before{transform:rotate(90deg)}
-details .inner{padding:0 16px 14px}
-.rules li{margin:0 0 8px 18px;font-size:13.5px;color:var(--ink)}
-.rules li b{color:var(--am)}
-.chips{display:flex;flex-wrap:wrap;gap:7px}
-.chips span{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:6px 10px;border-radius:9px;
-  background:#0e0b07;border:1px solid var(--line);color:var(--mut)}
-.stock b{display:block;font-family:var(--disp);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--am);margin:10px 0 4px}
-.stock p{font-size:13px;color:var(--mut)}
-footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5px;color:#5c5342}
-@media(hover:hover){
-  .it:hover{border-color:#6b4f14;transform:translateY(-1px)}
-  .btn:hover,#startBtn:hover{filter:brightness(1.06)}
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{transition:none!important;animation:none!important}
-}
-
-/* v7 */
-body.edit .it{position:relative}
-body.edit .it::after{content:'\2715';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#ff6b6b;font:800 14px Manrope,sans-serif}
-body.edit .it.off::after{content:''}
-.it.gone{display:none}
-#editBtn{margin-left:auto;padding:8px 14px;border:0;border-radius:10px;background:#2b2620;color:#f5a524;font:800 12px Manrope,sans-serif;cursor:pointer;box-shadow:0 3px 0 #17130e}
-#editBtn.on{background:#f5a524;color:#231a06}
-.histbox{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow:auto}
-.daycard{background:#171410;border:1px solid #2c2620;border-radius:12px;padding:10px 12px}
-.daycard .dh{display:flex;justify-content:space-between;font:800 12px Manrope,sans-serif;color:#f5a524;margin-bottom:6px}
-.daycard .dl{font:12px/1.55 Inter,sans-serif;color:#cfc6b8}
-.addbtn{display:none;width:100%;padding:10px;margin-top:8px;border:1px dashed #4a4136;border-radius:10px;background:none;color:#9c8f7d;font:700 12px Manrope,sans-serif}
+.box{width:30px;height:30px;flex:none;border-radius:9px;background:#0a0806;border:1px solid #3a332a;box-shadow:inset 0 2px 5px rgba(0,0,0,.8),0 1px 0 rgba(255,255,255,.05);display:grid;place-items:center;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.34,1.56,.64,1),background .2s,border-color .2s}
+.it.done .box{background:linear-gradient(180deg,var(--amber2),var(--amber));border-color:#c98f26;transform:rotateY(180deg) scale(1.08)}
+.it.done .box svg{transform:rotateY(180deg)}
+.box svg{width:16px;height:16px;stroke:#1a1206;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tx{flex:1;min-width:0}
+.nm{font:700 14px/1.25 Manrope,sans-serif}
+.ds{font:600 12px/1.3 JetBrains Mono,monospace;color:var(--mut);margin-top:2px}
+.it.done .nm{text-decoration:line-through;opacity:.45}
+.cat{font:700 9px/1 Manrope,sans-serif;letter-spacing:1px;color:#7c7260;background:#12100b;border:1px solid #2b261d;border-radius:6px;padding:4px 6px;flex:none}
+.it.off{opacity:.4;pointer-events:none}
+.it.off .box{border-style:dashed}
+.tag{font:700 9px/1 JetBrains Mono,monospace;color:#1a1206;border-radius:6px;padding:4px 6px;flex:none}
+.tag.w6{background:#ff9d5e;color:#231003}
+.tag.ifn{background:#c9a0ff;color:#1c0d33}
+.tag.usr{background:var(--teal);color:#04211c}
+.xbtn,.ebtn{position:absolute;top:-7px;width:26px;height:26px;border-radius:50%;border:1px solid #3a332a;background:#241f17;color:var(--ink);font:700 14px/1 sans-serif;display:none;place-items:center;cursor:pointer;z-index:3;box-shadow:0 2px 8px rgba(0,0,0,.6)}
+.xbtn{right:-7px}.ebtn{right:22px}
+body.edit .it .xbtn,body.edit .it .ebtn{display:grid}
+.xbtn.sure{background:var(--warn);color:#2a0703;border-color:#a3352c}
+.addbtn{display:none;width:100%;margin-top:2px;background:none;border:1.5px dashed #3a332a;border-radius:13px;color:var(--mut);font:700 13px Manrope,sans-serif;padding:13px 0;cursor:pointer}
 body.edit .addbtn{display:block}
+.cadrow .ds{color:#c8b98f}
+.spot,.btn{font:700 13px/1.2 Manrope,sans-serif;background:linear-gradient(180deg,#2a251c,#191510);color:var(--ink);border:1px solid #3a332a;border-bottom:4px solid #000;border-radius:12px;padding:13px 12px;cursor:pointer;transition:transform .06s}
+.spot:active,.btn:active{transform:translateY(3px);border-bottom-width:1px}
+.spot.hit{background:linear-gradient(180deg,#1d3a2c,#122619);border-color:#2e5c42;color:var(--ok)}
+#imList{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
+.spot small{display:block;font:600 10px/1.3 JetBrains Mono,monospace;color:var(--mut);margin-top:4px}
+.chip{display:inline-block;font:700 11px/1 JetBrains Mono,monospace;padding:6px 10px;border-radius:8px;background:#12100b;border:1px solid #2b261d;color:var(--mut);margin:0 6px 6px 0}
+.chip.ok{color:var(--ok);border-color:#27553c}
+.chip.due{color:var(--amber2);border-color:#5c4517}
+.vrow{display:flex;gap:8px;margin-top:10px}
+.vrow input{flex:1;min-width:0;background:#0d0b08;border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:11px 12px;font:600 13px JetBrains Mono,monospace}
+#vHist{list-style:none;margin-top:10px;font:600 12px/1.7 JetBrains Mono,monospace;color:var(--mut)}
+#vHist li{display:flex;gap:10px;justify-content:space-between;border-bottom:1px solid #1c1812;padding:5px 2px}
+#vHist li.hi{color:var(--warn)}
+.daycard{background:#12100b;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:8px}
+.daycard .dh{display:flex;justify-content:space-between;font:700 12px/1 Manrope,sans-serif;color:var(--amber2);margin-bottom:6px}
+.daycard .dh span{color:var(--mut);font-family:JetBrains Mono,monospace;font-weight:600}
+.daycard .names{font:600 12px/1.7 JetBrains Mono,monospace;color:var(--mut)}
+details{margin-bottom:14px}
+summary{cursor:pointer;font:800 12px/1 Manrope,sans-serif;text-transform:uppercase;letter-spacing:2px;color:var(--mut);padding:13px 2px;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"▾"}
+details[open] summary::after{content:"▴"}
+#finBtn{display:block;width:100%;font:800 15px/1 Manrope,sans-serif;color:#1a1206;background:linear-gradient(180deg,var(--amber2),var(--amber));border:1px solid #b47f1e;border-bottom:5px solid #7a550f;border-radius:13px;padding:15px 0;margin:16px 0 10px;cursor:pointer;transition:transform .06s}
+#finBtn:active{transform:translateY(3px);border-bottom-width:1px}
+#resetBtn{display:block;width:100%;background:none;border:1px solid #3a332a;color:var(--mut);font:700 12px Manrope,sans-serif;border-radius:11px;padding:11px 0;cursor:pointer}
+#resetBtn.sure{color:var(--warn);border-color:#7a3028}
+footer{margin-top:22px;text-align:center;font:600 10px/1.6 JetBrains Mono,monospace;color:#5c5546}
+#editBtn{font:700 11px/1 Manrope,sans-serif;color:var(--mut);background:#191510;border:1px solid #3a332a;border-radius:9px;padding:8px 12px;cursor:pointer;margin-left:auto}
+#editBtn.on{color:#1a1206;background:var(--amber);border-color:#c98f26}
+#sheet{position:fixed;left:0;right:0;bottom:-100%;max-height:82vh;overflow-y:auto;background:#171410;border-top:1.5px solid var(--amber);border-radius:22px 22px 0 0;box-shadow:0 -18px 50px rgba(0,0,0,.7);z-index:50;transition:bottom .35s cubic-bezier(.32,1.2,.5,1);padding:10px 16px calc(20px + env(safe-area-inset-bottom))}
+#sheet.open{bottom:0}
+#sheet .grab{width:44px;height:5px;border-radius:3px;background:#3a332a;margin:4px auto 14px}
+#sheet label{display:block;font:800 10px/1 Manrope,sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--mut);margin:14px 0 6px}
+#sheet input,#sheet select{width:100%;background:#0d0b08;border:1px solid var(--line);color:var(--ink);border-radius:11px;padding:13px 12px;font:600 15px Inter,sans-serif}
+.srow{display:flex;gap:10px;margin-top:18px}
+.srow button{flex:1;font:800 14px/1 Manrope,sans-serif;border-radius:12px;padding:15px 0;cursor:pointer;border:1px solid}
+#sSave{background:linear-gradient(180deg,var(--amber2),var(--amber));color:#1a1206;border-color:#b47f1e;border-bottom:4px solid #7a550f}
+#sDel{background:none;color:var(--warn);border-color:#7a3028}
+#sDel.sure{background:var(--warn);color:#2a0703}
+#sCan{background:none;color:var(--mut);border-color:#3a332a}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#241f14;border:1px solid var(--amber);color:var(--amber2);font:700 13px Manrope,sans-serif;border-radius:12px;padding:13px 20px;z-index:60;transition:transform .3s;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+@media(hover:hover) and (pointer:fine){.card:hover{transform:perspective(900px) rotateX(.8deg)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -223,369 +122,395 @@ body.edit .addbtn{display:block}
 <header>
   <div class="hrow">
     <h1>Proto<em>col</em></h1>
-    <span class="chip" id="ph">AM</span>
-    <span class="hdate" id="dt"></span>
+    <span id="ph">AM</span>
+    <button id="editBtn" hidden>Edit</button>
+    <div id="dt"></div>
   </div>
-  <div class="pmeter"><div class="pbar"><div class="pfill" id="pfill"></div></div><span class="pnum" id="pnum">0/37</span></div>
-  <nav class="tabs" role="tablist">
-    <button id="t-am" role="tab" aria-selected="true">Morning</button>
-    <button id="t-pm" role="tab" aria-selected="false">Evening</button>
-    <button id="t-rh" role="tab" aria-selected="false">Log</button>
+  <div class="pmeter"><div class="pbar"><div id="pfill"></div></div><span id="pnum">0/0</span></div>
+  <nav>
+    <button id="t-am" aria-selected="true">Morning</button>
+    <button id="t-pm" aria-selected="false">Evening</button>
+    <button id="t-rh" aria-selected="false">Log</button>
   </nav>
-<button id="editBtn" title="edit items" aria-label="edit items">EDIT</button></header>
+</header>
 
-<section class="panel on" id="p-am" role="tabpanel">
-  <div class="card tilt" id="cyc">
-    <div class="cycBig" id="cycBig">READY</div>
-    <div class="cycSub" id="cycSub">nothing logs until the run begins</div>
-    <div class="cycRow">
-      <input type="date" id="cycStart" aria-label="cycle start date">
-      <button id="startBtn" hidden>START RUN</button>
-    </div>
+<section class="panel on" id="p-am">
+  <div class="card" id="cyc">
+    <div class="big" id="cycBig">READY</div>
+    <div class="sub" id="cycSub">nothing logs until the run begins</div>
+    <button id="startBtn" hidden>START RUN</button>
+    <input type="date" id="cycStart" aria-label="cycle start date">
   </div>
-
-  <div class="grp"><h3>Organ armor</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">TUDCA</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">NAC</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Vitamin C</span><span class="ds">500 mg</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Omega-3</span><span class="ds">2 g · rTAG</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">CoQ10</span><span class="ds">100 mg</span></span><span class="cat">ARM</span></label>
-  </ul></div>
-
-  <div class="grp"><h3>Pharma wing</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Nebivolol</span><span class="ds">5 mg</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Telmisartan</span><span class="ds">80 mg</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Eplerenone</span><span class="ds">25 mg</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Empagliflozin</span><span class="ds">12.5 mg · ½ tab</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Ezetimibe</span><span class="ds">10 mg</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Rosuvastatin</span><span class="ds">10 mg</span></span><span class="cat">PHR</span></label>
-  </ul></div>
-
-  <div class="grp"><h3>Androgens</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Testosterone E</span><span class="ds">12.5 mg · IM</span></span><span class="cat">AND</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Trenbolone E</span><span class="ds">30 mg · IM</span></span><span class="cat">AND</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Masteron E</span><span class="ds">40 mg · IM</span></span><span class="cat">AND</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Anadrol</span><span class="ds">50 mg · 6-week window</span></span><span class="cat">6WK</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Tamoxifen</span><span class="ds">20 mg · 6-week window</span></span><span class="cat">6WK</span></label>
-  </ul></div>
-
-  <div class="grp"><h3>Support</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">D3 / K2</span><span class="ds">½ tab</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Multivitamin</span><span class="ds">1 cap</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Magnesium</span><span class="ds">2 caps</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Citicoline</span><span class="ds">500 mg</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Memantine</span><span class="ds">5 mg · ½ tab</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Tadalafil</span><span class="ds">10 mg · ½ tab</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Cardarine</span><span class="ds">10 mg</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Abaloparatide</span><span class="ds">100 µg · SC</span></span><span class="cat">SUP</span></label>
-    <label class="it cad2" id="rowE3D"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Aromasin</span><span class="ds" id="rowE3Dds">6.25 mg · ¼ tab · E3D</span></span><span class="cat">RHY</span></label>
-    <label class="it cad2" id="rowNad"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">NAD+</span><span class="ds" id="rowNadds">100 mg · SC · weekly</span></span><span class="cat">RHY</span></label>
-  </ul></div>
+  <div id="amGroups"></div>
 </section>
 
-<section class="panel" id="p-pm" role="tabpanel">
-  <div class="grp"><h3>Organ armor</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">TUDCA</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">NAC</span><span class="ds">600 mg</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Omega-3</span><span class="ds">2 g · rTAG</span></span><span class="cat">ARM</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Magnesium</span><span class="ds">1 cap</span></span><span class="cat">ARM</span></label>
-  </ul></div>
-  <div class="grp"><h3>Pharma</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Empagliflozin</span><span class="ds">12.5 mg · ½ tab</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">LDN</span><span class="ds">3 mg</span></span><span class="cat">PHR</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Clonidine</span><span class="ds">100 µg</span></span><span class="cat">PHR</span></label>
-  </ul></div>
-  <div class="grp"><h3>Peptides &amp; hormones</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">GHK-Cu · BPC-157 · TB-500</span><span class="ds">SC</span></span><span class="cat">PEP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">HGH</span><span class="ds">15 IU</span></span><span class="cat">PEP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Lantus</span><span class="ds">5 IU · if needed + meter</span></span><span class="cat">PEP</span></label>
-  </ul></div>
-  <div class="card tilt"><h3>Support</h3><ul>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Melatonin</span><span class="ds">20 mg</span></span><span class="cat">SUP</span></label>
-    <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Ashwagandha</span><span class="ds">500 mg</span></span><span class="cat">SUP</span></label>
-    <label class="it cad2" id="rowCab"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Cabergoline</span><span class="ds" id="rowCabds">0.25 mg · 2× weekly · with food</span></span><span class="cat">RHY</span></label>
-  </ul></div>
+<section class="panel" id="p-pm">
+  <div id="pmGroups"></div>
 </section>
-<section class="panel" id="p-rh" role="tabpanel">
-  <div class="card tilt"><h3>Day history</h3><div id="hist" class="histbox"></div></div>
 
-  <div class="card tilt" id="imRot">
-    <h3>IM rotation</h3>
-    <div class="cycSub" id="imSt" style="margin-bottom:10px">—</div>
-    <div id="imList"></div>
-  </div>
-
-  <div class="card tilt" id="vit">
-    <h3>Vitals</h3>
+<section class="panel" id="p-rh">
+  <h3>IM <b>rotation</b> · 4 sites</h3>
+  <div class="card"><span class="chip" id="imSt">—</span><div id="imList"></div></div>
+  <h3>Vitals <b>log</b></h3>
+  <div class="card">
     <div class="vrow">
       <input id="vGlu" type="number" inputmode="numeric" placeholder="glucose mg/dL">
       <input id="vBp" type="text" placeholder="BP 120/80">
       <button class="btn" id="vBtn">Log</button>
     </div>
-    <ul class="vhist" id="vHist"></ul>
+    <ul id="vHist"></ul>
   </div>
+  <h3>Day <b>history</b></h3>
+  <div id="hist"></div>
+  <details><summary>Standing rules</summary><div class="card" style="padding:12px">
+    <div class="chip">insulin 0 IU default — only if fasting glucose &gt;110-120</div>
+    <div class="chip">thyroid zero — sealed reserve, labs closed the question</div>
+    <div class="chip">350 g carbs · starch &gt; sugar</div>
+    <div class="chip">uric acid 8.2 → water + VitC + citrate first · ZYRIK only &gt;8.5-9</div>
+    <div class="chip">caber replaced prami · PRL draw = referee · taper on exit</div>
+    <div class="chip">not in stack: P5P · NACET · milk thistle · lemborexant</div>
+  </div></details>
+  <details><summary>Labs</summary><div class="card" style="padding:12px">
+    <div class="chip">Hct monthly</div><div class="chip">LFTs wk 3 in oral window</div>
+    <div class="chip">K⁺</div><div class="chip">sensitive E2</div><div class="chip">PRL</div>
+    <div class="chip">IGF-1</div><div class="chip">lipids</div><div class="chip">glucose</div>
+    <div class="chip">uric acid</div><div class="chip">GLS echo</div><div class="chip ok">next draw: TSH fT4 ALT AST GGT IGF-1 ferritin 25-OHD</div>
+  </div></details>
+  <details><summary>Stock</summary><div class="card" style="padding:12px">
+    <div class="chip ok">home: tamoxifen · cardarine 170 · tadalafil 170 · aromasin 96 · melatonin · NAC 200</div>
+    <div class="chip">local: TUDCA · citrate · meter + ketone strips · splitter</div>
+    <div class="chip">drawer: LUPI hCG · EUTHYROX · CYTOMEL · CLOMIDE</div>
+  </div></details>
+  <button id="finBtn">FINISH DAY</button>
+  <button id="resetBtn">Reset all data</button>
 </section>
 
-<details><summary>Standing rules</summary><div class="inner"><ul class="rules">
-  <li><b>Insulin 0 IU default</b> — Lantus opens only if fasting glucose trends >110–120 mg/dL on the meter (GH insulin resistance breaking through empa). First-ever dose 2–3 IU, meter check after.</li>
-  <li><b>Thyroid zero</b> — TSH 1.72 / fT3 3.06 euthyroid. Euthyrox + Cytomel stay sealed reserve.</li>
-  <li><b>350 g carbs/day</b> — starch over sugar (fructose drives uric acid), biggest portions around training. DKA protection with empa + GH.</li>
-  <li><b>Uric acid 8.2</b> — first line hydration 2.5–3 L + vitamin C + citrate. ZYRIK only if it stays >8.5–9 or a flare hits; never start during a flare.</li>
-  <li><b>Cabergoline replaced prami</b> — 0.25 mg 2×/weekly, PRL draw before first dose is the referee. Taper on exit, never cold-stop.</li>
-  <li><b>Not in stack</b> — P5P, NACET, milk thistle, lemborexant, anastrozole (3-year aromasin stock, Rule 3).</li>
-</ul></div></details>
-
-<details><summary>Labs</summary><div class="inner"><div class="chips">
-  <span>Hct monthly</span><span>LFTs wk 3</span><span>K⁺</span><span>sensitive E2</span><span>PRL</span><span>IGF-1</span><span>lipids</span><span>fasting glucose</span><span>uric acid</span><span>GLS echo</span><span>next draw: TSH · fT4 · ALT/AST/GGT · ferritin · 25(OH)D</span>
-</div></div></details>
-
-<details><summary>Stock</summary><div class="inner stock">
-  <b>Home</b><p>Tamoxifen · Cardarine 170×10 · Tadalafil ~170×20 · Aromasin 96×25 (3+ y) · Melatonin 4 g (~200 d) · NAC 200</p>
-  <b>Local</b><p>TUDCA · citrate powder · glucose meter + ketone strips · BP cuff · pill splitter · Omega-3 · Mg · D3/K2 · multi · CoQ10 · ashwagandha</p>
-  <b>Drawer</b><p>LUPI hCG (Rule 7) · Dostiheal reserve · Clomide (PCT) · Euthyrox + Cytomel (sealed)</p>
-</div></details>
-
-<button id="finBtn" style="width:100%;padding:14px;margin:10px 0 0;font:800 15px Manrope,sans-serif;border:0;border-radius:14px;background:#f5a524;color:#231a06;box-shadow:0 4px 0 #9a6a10">FINISH DAY — save today as card</button>
-<footer>checks reset at midnight · saved on this device · <button id="resetBtn" style="font:inherit;background:none;border:1px solid #5c5342;color:#b09a6a;border-radius:6px;padding:4px 10px;cursor:pointer">reset all data</button></footer>
+<footer>checks reset at midnight · everything saved on this device</footer>
 </div>
+
+<div id="sheet" role="dialog" aria-label="edit item">
+  <div class="grab"></div>
+  <label for="fName">Name</label><input id="fName" autocomplete="off">
+  <label for="fDose">Dose</label><input id="fDose" autocomplete="off">
+  <label for="fPanel">List</label>
+  <select id="fPanel"><option value="am">Morning</option><option value="pm">Evening</option></select>
+  <label for="fGroup">Group</label>
+  <select id="fGroup">
+    <option>Organ armor</option><option>Pharma wing</option><option>Androgens</option>
+    <option>Support</option><option>Peptides</option>
+  </select>
+  <div class="srow">
+    <button id="sDel">Delete</button>
+    <button id="sCan">Cancel</button>
+    <button id="sSave">Save</button>
+  </div>
+</div>
+<div id="toast"></div>
 
 <script>
 (function(){
-'use strict';
-var KEY='proto-v4', VKEY='proto-vitals';
+"use strict";
 var $=function(s){return document.querySelector(s)};
-var now=new Date();
-var isAM=now.getHours()<15;
+var KEY='proto-v8', VKEY='proto-vitals', VK8='proto-v8-vitals';
+var GROUPS=['Organ armor','Pharma wing','Androgens','Support','Peptides'];
 
-function tab(tid,pid){
-  ['t-am','t-pm','t-rh'].forEach(function(t){$('#'+t).setAttribute('aria-selected',t===tid?'true':'false')});
-  ['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('on',p===pid)});
+function seed(){
+return [
+ {id:'t1',n:'TUDCA',d:'600 mg',p:'am',g:'Organ armor'},
+ {id:'n1',n:'NAC',d:'600 mg',p:'am',g:'Organ armor'},
+ {id:'c1',n:'Vitamin C',d:'500 mg',p:'am',g:'Organ armor'},
+ {id:'o1',n:'Omega-3',d:'2 g · rTAG',p:'am',g:'Organ armor'},
+ {id:'q1',n:'CoQ10',d:'100 mg',p:'am',g:'Organ armor'},
+ {id:'b1',n:'Nebivolol',d:'5 mg',p:'am',g:'Pharma wing'},
+ {id:'t2',n:'Telmisartan',d:'80 mg',p:'am',g:'Pharma wing'},
+ {id:'e1',n:'Eplerenone',d:'25 mg',p:'am',g:'Pharma wing'},
+ {id:'g1',n:'Empagliflozin',d:'12.5 mg · ½ tab',p:'am',g:'Pharma wing'},
+ {id:'z1',n:'Ezetimibe',d:'10 mg',p:'am',g:'Pharma wing'},
+ {id:'r1',n:'Rosuvastatin',d:'10 mg',p:'am',g:'Pharma wing'},
+ {id:'w1',n:'Testosterone E',d:'12.5 mg · IM',p:'am',g:'Androgens'},
+ {id:'w2',n:'Trenbolone E',d:'30 mg · IM',p:'am',g:'Androgens'},
+ {id:'w3',n:'Masteron E',d:'40 mg · IM',p:'am',g:'Androgens'},
+ {id:'w4',n:'Anadrol',d:'50 mg',p:'am',g:'Androgens',t:'w6'},
+ {id:'w5',n:'Tamoxifen',d:'20 mg',p:'am',g:'Androgens',t:'w6'},
+ {id:'d1',n:'D3 / K2',d:'½ tab',p:'am',g:'Support'},
+ {id:'m1',n:'Multivitamin',d:'1 cap',p:'am',g:'Support'},
+ {id:'m2',n:'Magnesium',d:'2 caps',p:'am',g:'Support'},
+ {id:'i1',n:'Citicoline',d:'500 mg',p:'am',g:'Support'},
+ {id:'i2',n:'Memantine',d:'5 mg · ½ tab',p:'am',g:'Support'},
+ {id:'i3',n:'Tadalafil',d:'10 mg · ½ tab',p:'am',g:'Support'},
+ {id:'i4',n:'Cardarine',d:'10 mg',p:'am',g:'Support'},
+ {id:'i5',n:'Abaloparatide',d:'100 µg · SC',p:'am',g:'Support'},
+ {id:'a1',n:'Aromasin',d:'6.25 mg · ¼ tab',p:'am',g:'Support',cad:'e3d'},
+ {id:'a2',n:'NAD+',d:'100 mg · SC',p:'am',g:'Support',cad:'nad'},
+ {id:'T2b',n:'TUDCA',d:'600 mg',p:'pm',g:'Organ armor'},
+ {id:'n2',n:'NAC',d:'600 mg',p:'pm',g:'Organ armor'},
+ {id:'o2',n:'Omega-3',d:'2 g',p:'pm',g:'Organ armor'},
+ {id:'m3',n:'Magnesium',d:'1 cap',p:'pm',g:'Organ armor'},
+ {id:'g2',n:'Empagliflozin',d:'12.5 mg · ½ tab',p:'pm',g:'Pharma wing'},
+ {id:'l1',n:'LDN',d:'3 mg',p:'pm',g:'Pharma wing'},
+ {id:'k1',n:'Clonidine',d:'100 µg',p:'pm',g:'Pharma wing'},
+ {id:'p1',n:'GHK-Cu · BPC-157 · TB-500',d:'SC',p:'pm',g:'Peptides'},
+ {id:'h1',n:'HGH',d:'15 IU',p:'pm',g:'Peptides'},
+ {id:'h2',n:'Lantus',d:'5 IU',p:'pm',g:'Peptides',t:'ifn'},
+ {id:'a3',n:'Cabergoline',d:'0.25 mg',p:'pm',g:'Support',cad:'cab'},
+ {id:'s1',n:'Melatonin',d:'20 mg',p:'pm',g:'Support'},
+ {id:'s2',n:'Ashwagandha',d:'500 mg',p:'pm',g:'Support'}
+];
 }
-$('#t-am').onclick=function(){tab('t-am','p-am')};
-$('#t-pm').onclick=function(){tab('t-pm','p-pm')};
-$('#t-rh').onclick=function(){tab('t-rh','p-rh')};
 
-function fresh(){return {day:now.toDateString(),checked:[],e3d:null,cab:[],nad:[],start:null,im:[],checkedIds:null,custom:null,history:[]}}
+var S;
 function load(){
-  var s; try{s=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){s={}}
-  if(!s.day||s.day!==now.toDateString()){
-    s={day:now.toDateString(),checked:[],e3d:s.e3d||null,cab:s.cab||[],nad:s.nad||[],start:s.start||null,im:[],checkedIds:null,custom:null,history:[]};
-  }
-  if(!s.im)s.im=[]; if(s.checkedIds===undefined)s.checkedIds=null; if(!s.custom)s.custom={hid:[],ed:{},add:[]}; if(!s.history)s.history=[];
+  var s;try{s=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){s=null}
+  if(!s||s.v!==8){s={v:8,day:new Date().toDateString(),items:seed(),checked:[],start:null,e3d:null,cab:[],nad:[],im:[],history:[]}}
+  if(s.day!==new Date().toDateString()){s.day=new Date().toDateString();s.checked=[];s.im=[]}
+  if(!s.items||!s.items.length)s.items=seed();
   return s;
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(S))}
-var S=load();
-if(!isAM && S.start) tab('t-pm','p-pm');
 
-/* phase chip + date */
-function phPaint(){
-  $('#ph').textContent=isAM?'AM':'PM';
-  document.body.classList.toggle('pm',!isAM);
-  $('#dt').textContent=now.toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+/* ---------- state helpers ---------- */
+function dstr(t){return new Date(t).toDateString()}
+function todayIn(a){return a.some(function(x){return dstr(x)===new Date().toDateString()})}
+function rmToday(a){return a.filter(function(x){return dstr(x)!==new Date().toDateString()})}
+function e3dAge(){if(!S.e3d)return null;return Math.floor((Date.now()-S.e3d)/864e5)}
+function wkKey(t){var d=new Date(t);d.setHours(0,0,0,0);d.setDate(d.getDate()+3-(d.getDay()+6)%7);var w1=new Date(d.getFullYear(),0,4);return d.getFullYear()+'-'+Math.round(((d-w1)/864e5-3+((w1.getDay()+6)%7))/7)}
+function wkCount(a){var k=wkKey(Date.now());return a.filter(function(x){return wkKey(x)===k}).length}
+function localDate(){var n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0')}
+
+/* ---------- render ---------- */
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function rowHtml(it){
+  var cls='it'+(S.checked.indexOf(it.id)>=0?' done':'')+(it.cad?' cadrow':'');
+  var tag=it.t?'<span class="tag '+it.t+'">'+(it.t==='w6'?'6WK':'IF NEEDED')+'</span>':'';
+  var usr=it.usr?'<span class="tag usr">USR</span>':'';
+  var cat=it.cad?'<span class="cat">RHY</span>':'';
+  return '<label class="'+cls+'" data-id="'+it.id+'">'+
+    '<input type="checkbox" '+(S.checked.indexOf(it.id)>=0?'checked':'')+' aria-label="'+esc(it.n)+'">'+
+    '<span class="box"><svg viewBox="0 0 24 24"><path d="M4 12l5 5L20 7"/></svg></span>'+
+    '<span class="tx"><span class="nm">'+esc(it.n)+'</span><span class="ds" id="ds-'+it.id+'">'+esc(it.d)+'</span></span>'+
+    tag+usr+cat+
+    '<span class="ebtn" role="button" aria-label="edit">✎</span><span class="xbtn" role="button" aria-label="delete">✕</span></label>';
 }
-phPaint();
-
-/* items */
-const rowId=(el)=>{const r=el.closest('.it');if(!r.dataset.id){const nm=r.querySelector('.nm');const pn=(r.closest('.panel')||{}).id||'x';r.dataset.id=nm?('k-'+pn+'-'+nm.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-')):('r'+Math.random().toString(36).slice(2,8));}return r.dataset.id;};
-(function migrateIdx(){ if(S.checkedIds===null||S.checkedIds===undefined){ S.checkedIds=[]; document.querySelectorAll('.it input.cbx').forEach((cb,i)=>{const id=rowId(cb); if(S.checked&&S.checked.indexOf(i)>-1)S.checkedIds.push(id);}); S.checked=null; save(); } })();
-let items=[...document.querySelectorAll('.it input.cbx')];
-let TOTAL=items.length;
-function paint(){ let n=0; items.forEach(cb=>{const on=S.checkedIds.indexOf(rowId(cb))>-1; cb.checked=on; cb.closest('.it').classList.toggle('done',on); if(on)n++; }); $('#pnum').textContent=n+'/'+TOTAL; $('#pfill').style.width=(TOTAL?100*n/TOTAL:0)+'%'; }
-function wire(){ items.forEach(cb=>{ cb.addEventListener('change',()=>{ if(!S.start){cb.checked=false;return;} const id=rowId(cb); const ix=S.checkedIds.indexOf(id); if(cb.checked&&ix<0)S.checkedIds.push(id); if(!cb.checked&&ix>-1)S.checkedIds.splice(ix,1); save(); paint(); }); }); }
-wire();
-
-/* cycle tracker */
-function cyc(){
-  var big=$('#cycBig'),sub=$('#cycSub'),btn=$('#startBtn');
-  if(!S.start){
-    big.textContent='READY';btn.hidden=false;
-    sub.textContent='nothing logs until the run begins';
-    return;
-  }
-  btn.hidden=true;
-  var d1=new Date(S.start+'T00:00:00');
-  var day=Math.floor((new Date().setHours(0,0,0,0)-d1)/864e5)+1;
-  if(day<1)day=1;
-  var wk=Math.ceil(day/7); if(wk>52)wk=52;
-  big.textContent='week '+wk+' / 52';
-  var oral=day<=42?' · oral window: <span class="hot">day '+day+'/42</span>':' · oral window: closed';
-  sub.innerHTML='day '+day+' · week '+wk+' of 52'+oral;
+function render(){
+  ['am','pm'].forEach(function(p){
+    var host=$(p==='am'?'#amGroups':'#pmGroups');host.innerHTML='';
+    GROUPS.forEach(function(g){
+      var rows=S.items.filter(function(it){return it.p===p&&it.g===g});
+      if(!rows.length)return;
+      var h='<h3>'+esc(g)+' <b>· '+rows.length+'</b></h3><ul>';
+      rows.forEach(function(it){h+=rowHtml(it)});
+      h+='</ul><button class="addbtn" data-panel="'+p+'" data-group="'+esc(g)+'">+ add item</button>';
+      host.insertAdjacentHTML('beforeend',h);
+    });
+  });
+  wire();paint();cadPaint();
 }
-$('#cycStart').addEventListener('change',function(){
-  if(this.value){S.start=this.value;save();cyc();impaint();locks();paintCadRows()}
+function wire(){
+  document.querySelectorAll('.it').forEach(function(li){
+    var id=li.dataset.id, it=S.items.find(function(x){return x.id===id});
+    li.querySelector('input').addEventListener('change',function(e){
+      if(!S.start){e.target.checked=false;toast('press START first');return}
+      if(it.cad){e.target.checked=false;cadToggle(it);return}
+      var i=S.checked.indexOf(id);
+      if(e.target.checked&&i<0)S.checked.push(id);
+      if(!e.target.checked&&i>=0)S.checked.splice(i,1);
+      li.classList.toggle('done',e.target.checked);save();paint();
+    });
+    li.querySelector('.ebtn').addEventListener('click',function(e){e.preventDefault();e.stopPropagation();openSheet(it)});
+    li.querySelector('.xbtn').addEventListener('click',function(e){
+      e.preventDefault();e.stopPropagation();var b=this;
+      if(!b.classList.contains('sure')){b.classList.add('sure');b.textContent='?';setTimeout(function(){b.classList.remove('sure');b.textContent='✕'},1800);return}
+      S.items=S.items.filter(function(x){return x.id!==id});
+      S.checked=S.checked.filter(function(c){return c!==id});
+      save();render();toast('deleted');
+    });
+  });
+  document.querySelectorAll('.addbtn').forEach(function(b){
+    b.addEventListener('click',function(){openSheet(null,b.dataset.panel,b.dataset.group)});
+  });
+}
+function paint(){
+  var total=S.items.filter(function(i){return !i.cad&&i.p}).length;
+  var n=S.checked.filter(function(c){return S.items.some(function(i){return i.id===c&&!i.cad})}).length;
+  $('#pnum').textContent=n+'/'+total;
+  $('#pfill').style.width=(total?Math.round(n/total*100):0)+'%';
+}
+
+/* ---------- cadence ---------- */
+function cadToggle(it){
+  if(it.cad==='e3d'){S.e3d=(e3dAge()===0)?null:Date.now()}
+  if(it.cad==='cab'){S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()])}
+  if(it.cad==='nad'){S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()])}
+  save();cadPaint();
+}
+function cadState(it){
+  if(!S.start)return{cls:'off',ds:it.d+' · starts with the run'};
+  if(it.cad==='e3d'){var a=e3dAge();
+    if(a===0)return{cls:'done off',ds:'done today'};
+    if(a===null||a>=3)return{cls:'',ds:'due today · ¼ tab'};
+    return{cls:'off',ds:'day '+a+' of 3 · not today'};}
+  if(it.cad==='cab'){var w=wkCount(S.cab);
+    if(todayIn(S.cab))return{cls:'done off',ds:'done this week '+w+'/2'};
+    if(w>=2)return{cls:'off',ds:'2/2 this week'};
+    return{cls:'',ds:'due · '+(2-w)+' left this week'};}
+  if(it.cad==='nad'){
+    if(todayIn(S.nad))return{cls:'done off',ds:'done this week'};
+    return{cls:'',ds:'due this week · pick your day'};}
+  return{cls:'',ds:it.d};
+}
+function cadPaint(){
+  S.items.forEach(function(it){
+    if(!it.cad)return;var li=document.querySelector('.it[data-id="'+it.id+'"]');if(!li)return;
+    var st=cadState(it);
+    li.classList.remove('done','off');
+    if(st.cls){st.cls.split(' ').forEach(function(c){if(c)li.classList.add(c)})}
+    li.querySelector('input').checked=st.cls.indexOf('done')>=0;
+    var ds=li.querySelector('.ds');if(ds)ds.textContent=st.ds;
+  });
+}
+
+/* ---------- sheet (edit/add) ---------- */
+var editing=null,addP=null,addG=null,delArm=false;
+function openSheet(it,p,g){
+  editing=it;addP=p||null;addG=g||null;delArm=false;
+  $('#fName').value=it?it.n:'';$('#fDose').value=it?it.d:'';
+  $('#fPanel').value=it?it.p:(p||'am');$('#fGroup').value=it?it.g:(g||'Support');
+  $('#fGroup').innerHTML=GROUPS.map(function(x){return '<option'+(x===(it?it.g:(g||'Support'))?' selected':'')+'>'+x+'</option>'}).join('');
+  var del=$('#sDel');del.style.display=it?'block':'none';del.classList.remove('sure');del.textContent='Delete';
+  $('#sheet').classList.add('open');
+}
+function closeSheet(){$('#sheet').classList.remove('open');editing=null;addP=null;addG=null}
+$('#sCan').addEventListener('click',closeSheet);
+$('#sDel').addEventListener('click',function(){
+  if(!editing)return;var b=this;
+  if(!delArm){delArm=true;b.classList.add('sure');b.textContent='Sure?';setTimeout(function(){delArm=false;b.classList.remove('sure');b.textContent='Delete'},1800);return}
+  S.items=S.items.filter(function(x){return x.id!==editing.id});
+  S.checked=S.checked.filter(function(c){return c!==editing.id});
+  save();render();closeSheet();toast('deleted');
 });
-$('#startBtn').onclick=function(){
-  var n=new Date();
-  S.start=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
-  save();$('#cycStart').value=S.start;cyc();impaint();locks();paintCadRows();
-};
-function locks(){
-  var on=!S.start;
-  ['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('locked',on)});
+$('#sSave').addEventListener('click',function(){
+  var n=$('#fName').value.trim(),d=$('#fDose').value.trim()||'—';
+  if(!n){toast('name is empty');return}
+  if(editing){editing.n=n;editing.d=d;editing.p=$('#fPanel').value;editing.g=$('#fGroup').value}
+  else{var id='u'+Date.now().toString(36);S.items.push({id:id,n:n,d:d,p:$('#fPanel').value,g:$('#fGroup').value,usr:true})}
+  save();render();closeSheet();toast(editing?'saved':'added');
+});
+
+/* ---------- edit mode ---------- */
+var editOn=false;
+$('#editBtn').addEventListener('click',function(){
+  editOn=!editOn;this.classList.toggle('on',editOn);this.textContent=editOn?'Done':'Edit';
+  document.body.classList.toggle('edit',editOn);
+});
+
+/* ---------- tabs / phase ---------- */
+function tab(id,panel){
+  ['t-am','t-pm','t-rh'].forEach(function(t){$('#'+t).setAttribute('aria-selected',t===id)});
+  ['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('on',p===panel)});
+}
+$('#t-am').addEventListener('click',function(){tab('t-am','p-am')});
+$('#t-pm').addEventListener('click',function(){tab('t-pm','p-pm')});
+$('#t-rh').addEventListener('click',function(){tab('t-rh','p-rh')});
+function phPaint(){
+  var am=new Date().getHours()<15;
+  $('#ph').textContent=am?'AM':'PM';document.body.classList.toggle('pm',!am);
+  $('#dt').textContent=new Date().toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'});
 }
 
-/* cadence */
-function e3dAge(){if(!S.e3d)return 99;return Math.floor((Date.now()-S.e3d)/864e5)}
-function dstr(t){var d=new Date(t);return d.toDateString()}
-function todayIn(a){return a.some(function(t){return dstr(t)===new Date().toDateString()})}
-function rmToday(a){return a.filter(function(t){return dstr(t)!==new Date().toDateString()})}
-function wkKey(t){var d=new Date(t);var o=new Date(d.getFullYear(),0,1);return d.getFullYear()+'w'+Math.ceil(((d-o)/864e5+o.getDay()+1)/7)}
+/* ---------- cycle ---------- */
+function cyc(){
+  if(!S.start){$('#cycBig').textContent='READY';$('#cycSub').textContent='nothing logs until the run begins';$('#startBtn').hidden=false;return}
+  $('#startBtn').hidden=true;
+  var day=Math.floor((Date.now()-new Date(S.start+'T00:00:00'))/864e5)+1;
+  if(day<1)day=1;var wk=Math.min(52,Math.ceil(day/7));
+  var oral=day<=42?' · oral window: <span class="hot">day '+day+'/42</span>':' · oral window closed';
+  $('#cycBig').innerHTML='week '+wk+' / 52';
+  $('#cycSub').innerHTML='day '+day+' · week '+wk+' of 52'+oral;
+}
+$('#cycStart').addEventListener('change',function(){if(this.value){S.start=this.value;save();cyc();locks();cadPaint();impaint()}});
+$('#startBtn').addEventListener('click',function(){S.start=localDate();save();$('#cycStart').value=S.start;cyc();locks();cadPaint();impaint();toast('run started')});
+function locks(){var on=!S.start;['p-am','p-pm','p-rh'].forEach(function(p){$('#'+p).classList.toggle('locked',on)});$('#editBtn').hidden=on}
 
-/* IM rotation */
+/* ---------- IM rotation ---------- */
 var SPOTS=['L shoulder','R shoulder','L glute','R glute'];
 var IMS=['Testosterone E 12.5 mg','Trenbolone E 30 mg','Masteron E 40 mg'];
-function imDay(){if(!S.start)return null;var d1=new Date(S.start+'T00:00:00');return Math.floor((new Date().setHours(0,0,0,0)-d1)/864e5)}
 function impaint(){
-  var list=$('#imList'),st=$('#imSt');
-  var day=imDay();
-  if(day===null){st.textContent='starts with the run';list.innerHTML='';return}
-  var ok=S.im.filter(function(v){return v}).length;
-  st.textContent=ok+'/3 logged · rotation day '+(day+1);
-  list.innerHTML='';
+  var host=$('#imList');host.innerHTML='';
+  if(!S.start){$('#imSt').textContent='starts with the run';return}
+  var day=Math.floor((Date.now()-new Date(S.start+'T00:00:00'))/864e5)+1;
+  var n=0;
   IMS.forEach(function(nm,k){
-    var b=document.createElement('button');
-    b.className='spot'+(S.im[k]?' hit':'');
-    b.textContent=nm+' → '+SPOTS[(day+k)%4];
-    b.onclick=function(){if(!S.start)return;S.im[k]=!S.im[k];save();impaint()};
-    list.appendChild(b);
+    var hit=S.im[k];if(hit)n++;
+    var b=document.createElement('button');b.className='spot'+(hit?' hit':'');
+    b.innerHTML=nm+' → <b>'+SPOTS[(day+k)%4]+'</b><small>'+(hit?'logged':'tap when done')+'</small>';
+    b.addEventListener('click',function(){S.im[k]=!S.im[k];save();impaint()});
+    host.appendChild(b);
   });
+  $('#imSt').textContent='day '+day+' · '+n+'/3 logged';
 }
 
-/* vitals — persists across midnight */
-function vload(){try{return JSON.parse(localStorage.getItem(VKEY)||'[]')}catch(e){return[]}}
+/* ---------- vitals ---------- */
+function vload(){try{return JSON.parse(localStorage.getItem(VK8)||'[]')}catch(e){return[]}}
+function vsave(v){localStorage.setItem(VK8,JSON.stringify(v))}
 function vpaint(){
-  var h=$('#vHist'),v=vload();
-  h.innerHTML='';
+  var v=vload(),h=$('#vHist');h.innerHTML='';
   v.slice(-5).reverse().forEach(function(e){
-    var li=document.createElement('li');
-    li.textContent=e.d+'  ·  glucose '+(e.g||'—')+'  ·  '+(e.b||'—');
-    if(typeof e.g==='number'&&e.g>110)li.className='hi';
-    h.appendChild(li);
+    var li=document.createElement('li');if(e.g&&e.g>110)li.classList.add('hi');
+    li.innerHTML='<span>'+e.d+'</span><span>'+(e.g||'—')+' mg/dL · '+(e.b||'—')+'</span>';h.appendChild(li);
   });
 }
-$('#vBtn').onclick=function(){
-  if(!S.start)return;
-  var v=vload(),g=$('#vGlu').value,b=$('#vBp').value;
-  if(!g&&!b)return;
-  v.push({d:new Date().toLocaleDateString(undefined,{month:'short',day:'numeric'}),g:g?+g:null,b:b||null});
-  if(v.length>90)v=v.slice(-90);
-  localStorage.setItem(VKEY,JSON.stringify(v));
-  $('#vGlu').value='';$('#vBp').value='';vpaint();
-};
-
-/* 3D tilt — pointer-follow on cards, skipped pre-start-safe */
-var tiltOK=!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-if(tiltOK&&window.matchMedia('(hover:hover)').matches){
-  document.querySelectorAll('.tilt').forEach(function(el){
-    el.addEventListener('pointermove',function(e){
-      var r=el.getBoundingClientRect();
-      var x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
-      el.style.transform='perspective(900px) rotateX('+(1.2-y*6)+'deg) rotateY('+(x*6)+'deg)';
-    });
-    el.addEventListener('pointerleave',function(){el.style.transform='';});
-  });
-}
-
-/* init */
-function wkCount(arr){return (arr||[]).filter(function(t){return wkKey(t)===wkKey(Date.now())}).length}
-function paintCadRows(){
-  if(!S.start){['rowE3D','rowCab','rowNad'].forEach(function(id){var r=document.getElementById(id);if(r)r.classList.add('off')});return}
-  var e=e3dAge(), rE=document.getElementById('rowE3D'), cE=document.getElementById('rowE3Dds'), cbE=rE.querySelector('input');
-  rE.classList.remove('off');cbE.checked=false;
-  if(e===0){cbE.checked=true;rE.classList.add('off');cE.textContent='done today'}
-  else if(e===null||e>=3){cE.textContent='due today · ¼ tab'}
-  else{rE.classList.add('off');cE.textContent='day '+e+' of 3 · not today'}
-  var rC=document.getElementById('rowCab'),cC=document.getElementById('rowCabds'),cbC=rC.querySelector('input'),wC=wkCount(S.cab),tC=todayIn(S.cab);
-  rC.classList.remove('off');cbC.checked=!!tC;
-  if(tC){rC.classList.add('off');cC.textContent='done this week '+(wC)+'/2'}
-  else if(wC>=2){rC.classList.add('off');cC.textContent='2/2 this week'}
-  else{cC.textContent='due · '+(2-wC)+' left this week'}
-  var rN=document.getElementById('rowNad'),cN=document.getElementById('rowNadds'),cbN=rN.querySelector('input'),tN=todayIn(S.nad);
-  rN.classList.remove('off');cbN.checked=!!tN;
-  if(tN){rN.classList.add('off');cN.textContent='done this week'}
-  else{cN.textContent='due this week · pick your day'}
-}
-['rowE3D','rowCab','rowNad'].forEach(function(id){
-  var r=document.getElementById(id);if(!r)return;
-  r.addEventListener('change',function(){
-    if(!S.start)return;
-    if(id==='rowE3D'){S.e3d=e3dAge()===0?null:Date.now();save()}
-    if(id==='rowCab'){S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save()}
-    if(id==='rowNad'){S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save()}
-    paintCadRows();
-  });
+$('#vBtn').addEventListener('click',function(){
+  if(!S.start){toast('press START first');return}
+  var g=$('#vGlu').value,b=$('#vBp').value.trim();
+  if(!g&&!b){toast('enter a value');return}
+  var v=vload();v.push({d:new Date().toLocaleDateString(undefined,{day:'numeric',month:'short'}),g:g?+g:null,b:b});
+  if(v.length>90)v=v.slice(-90);vsave(v);$('#vGlu').value='';$('#vBp').value='';vpaint();
+  if(g&&+g>110)toast('glucose '+g+' — above 110, watch it');
 });
-document.getElementById('resetBtn').onclick=function(){
-  if(confirm('Reset everything? Clears all logs, vitals and the start date.')){localStorage.removeItem('proto-v4');localStorage.removeItem('proto-vitals');location.reload()}
-};
-cyc();locks();impaint();paint();vpaint();applyCustom();renderHist();
-paintCadRows();
 
-/* ---- v7: CRUD + day history ---- */
-function applyCustom(){
- const C=S.custom;
- document.querySelectorAll('.it').forEach(r=>{
-   const id=r.dataset.id||(r.dataset.id='r'+Math.random().toString(36).slice(2,8));
-   if(C.hid.indexOf(id)>-1){r.classList.add('gone');return;}
-   if(C.ed[id]){const nm=r.querySelector('.nm'),ds=r.querySelector('.ds');if(nm)nm.textContent=C.ed[id].n;if(ds)ds.textContent=C.ed[id].d;}
- });
- (C.add||[]).forEach(a=>{
-   const ul=document.querySelector('#'+a.panel+' .grp:nth-of-type('+a.gi+') ul')||document.querySelector('#'+a.panel+' ul');
-   if(!ul)return; if(ul.querySelector('[data-id="'+a.id+'"]'))return;
-   const li=document.createElement('label');li.className='it';li.dataset.id=a.id;
-   li.innerHTML='<input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 12 10"><path d="M2 5l3 3 5-7"/></svg></span><span class="tx"><span class="nm">'+a.n+'</span><span class="ds">'+a.d+'</span></span><span class="cat">USR</span>';
-   ul.appendChild(li);
- });
- items=[...document.querySelectorAll('.it input.cbx')];TOTAL=items.length;wire();paint();
-}
-document.querySelectorAll('#p-am .grp,#p-pm .grp').forEach((g,gi)=>{
- const b=document.createElement('button');b.className='addbtn';b.textContent='+ add item';
- b.onclick=()=>{const n=prompt('Name (e.g. Creatine):');if(!n)return;const d=prompt('Dose (e.g. 5 g):')||'';
-  const panel=g.closest('.panel').id;const pg=document.querySelectorAll('#'+panel+' .grp');
-  const id='u'+Date.now().toString(36);S.custom.add.push({id,n,d,panel,gi:[...pg].indexOf(g)+1});save();
-  const ul=g.querySelector('ul');const li=document.createElement('label');li.className='it';li.dataset.id=id;
-  li.innerHTML='<input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 12 10"><path d="M2 5l3 3 5-7"/></svg></span><span class="tx"><span class="nm">'+n+'</span><span class="ds">'+d+'</span></span><span class="cat">USR</span>';
-  ul.appendChild(li);items=[...document.querySelectorAll('.it input.cbx')];TOTAL=items.length;wire();paint();};
- g.appendChild(b);
+/* ---------- finish day ---------- */
+$('#finBtn').addEventListener('click',function(){
+  if(!S.start){toast('nothing to finish — not started');return}
+  if(S.history.some(function(h){return h.day===new Date().toDateString()})){toast('today already logged');return}
+  var names=S.checked.map(function(id){var it=S.items.find(function(x){return x.id===id});return it?it.n:null}).filter(Boolean);
+  var cad=[];
+  if(e3dAge()===0)cad.push('Aromasin');
+  if(todayIn(S.cab))cad.push('Caber');
+  if(todayIn(S.nad))cad.push('NAD+');
+  var im=S.im.filter(Boolean).length;
+  var v=vload();var last=v.length?v[v.length-1]:null;
+  S.history.push({day:new Date().toDateString(),n:names.length,names:names,cad:cad,im:im,vit:last?(last.g||'—')+' / '+(last.b||'—'):null});
+  if(S.history.length>120)S.history=S.history.slice(-120);
+  save();histPaint();toast('day logged · '+names.length+' items');
 });
-$('#editBtn').onclick=()=>{document.body.classList.toggle('edit');$('#editBtn').classList.toggle('on');};
-document.addEventListener('click',(e)=>{
- if(!document.body.classList.contains('edit'))return;
- const it=e.target.closest('.it');if(!it||it.classList.contains('cad2'))return;
- const r=it.getBoundingClientRect();
- if(e.clientX>r.right-44){ // ✕ zone -> delete
-  const id=it.dataset.id;S.custom.hid.push(id);if(S.checkedIds){const ix=S.checkedIds.indexOf(id);if(ix>-1)S.checkedIds.splice(ix,1);}save();applyCustom();return;
- }
- const nm=it.querySelector('.nm'),ds=it.querySelector('.ds');const id=it.dataset.id;
- const n=prompt('Edit name:',nm?nm.textContent:'');if(n===null)return;
- const d=prompt('Edit dose:',ds?ds.textContent:'');if(d===null)return;
- S.custom.ed[id]={n:n||'(item)',d:d||''};save();applyCustom();
-},true);
-function finishDay(){
- if(!S.start){alert('Start the run first.');return;}
- if(S.history.length&&S.history[0].day===new Date().toDateString()){alert('Today already logged.');return;}
- const names=[];document.querySelectorAll('#p-am .it,#p-pm .it').forEach(r=>{if(r.classList.contains('gone')||r.classList.contains('cad2'))return;const cb=r.querySelector('input.cbx');if(cb&&cb.checked){const nm=r.querySelector('.nm');names.push(nm?nm.textContent:'?');}});
- const cad=[];if(S.e3d&&e3dAge()<1)cad.push('Aromasin');if(todayIn(S.cab))cad.push('Caber');if(todayIn(S.nad))cad.push('NAD+');
- const im=(S.im||[]).filter(Boolean).length;
- let vit=null;try{const V=JSON.parse(localStorage.getItem('proto-vitals')||'[]');if(V.length)vit=V[V.length-1];}catch(_){}
- S.history.unshift({day:new Date().toDateString(),n:names.length,names:names,cad:cad,im:im,vit:vit});
- if(S.history.length>120)S.history.length=120;
- save();renderHist();
- alert('Day saved: '+names.length+' items'+(cad.length?' · '+cad.join(', '):'')+(im?' · IM '+im+'/3':''));
+function histPaint(){
+  var host=$('#hist');host.innerHTML='';
+  if(!S.history.length){host.innerHTML='<div class="daycard"><div class="names">no days yet — FINISH DAY at night saves what you took as one card</div></div>';return}
+  S.history.slice().reverse().forEach(function(h){
+    var d=document.createElement('div');d.className='daycard';
+    d.innerHTML='<div class="dh">'+h.day+'<span>'+h.n+' items · IM '+h.im+'/3'+(h.cad.length?' · '+h.cad.join(' · '):'')+(h.vit?' · '+h.vit:'')+'</span></div>'+
+      '<div class="names">'+h.names.map(esc).join(' · ')+'</div>';
+    host.appendChild(d);
+  });
 }
-function renderHist(){
- const h=$('#hist');if(!h)return;
- h.innerHTML=S.history.length?'':'<div class="dl" style="color:#8d8172;font:12px Inter,sans-serif">no days finished yet — press FINISH DAY at night</div>';
- S.history.forEach(d=>{
-  const c=document.createElement('div');c.className='daycard';
-  const vit=d.vit&&d.vit.g?(' · glu '+d.vit.g+(d.vit.b?' · '+d.vit.b:'')):'';
-  c.innerHTML='<div class="dh"><span>'+d.day+'</span><span>'+d.n+' items'+(d.im?' · IM '+d.im+'/3':'')+(d.cad&&d.cad.length?' · '+d.cad.join(', '):'')+vit+'</span></div>'+(d.names.length?'<div class="dl">'+d.names.join(' · ')+'</div>':'<div class="dl" style="color:#8d8172">nothing checked</div>');
-  h.appendChild(c);
- });
-}
-$('#finBtn').onclick=finishDay;
 
+/* ---------- reset ---------- */
+var resetArm=false;
+$('#resetBtn').addEventListener('click',function(){
+  var b=this;
+  if(!resetArm){resetArm=true;b.classList.add('sure');b.textContent='Tap again to wipe EVERYTHING';setTimeout(function(){resetArm=false;b.classList.remove('sure');b.textContent='Reset all data'},2500);return}
+  localStorage.removeItem(KEY);localStorage.removeItem(VK8);location.reload();
+});
+
+/* ---------- toast ---------- */
+var toastT;
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},2200)}
+
+/* ---------- boot ---------- */
+S=load();save();
+phPaint();render();cyc();locks();impaint();vpaint();histPaint();
+if(new Date().getHours()>=15&&S.start)tab('t-pm','p-pm');
+setInterval(function(){var d=new Date().toDateString();if(d!==S.day){S.day=d;S.checked=[];S.im=[];save();render();cadPaint();impaint()}},60000);
 })();
 </script>
 </body>
