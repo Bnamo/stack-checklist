@@ -85,7 +85,7 @@
     display:flex;align-items:center;gap:12px;
     border:1px solid var(--line);border-radius:12px;
     background:#fff;padding:13px 14px;margin-bottom:8px;
-    cursor:pointer;user-select:none;min-height:56px;
+    cursor:pointer;user-select:none;min-height:56px;position:relative;
     transition:border-color .15s,opacity .2s;
   }
   .it:active{background:var(--row)}
@@ -99,6 +99,7 @@
   .it.done .box{background:var(--ink);border-color:var(--ink)}
   .it.done .box svg{opacity:1;transform:scale(1)}
   .it.done .tx{opacity:.42}
+  .cbx{position:absolute;opacity:0;width:1px;height:1px;margin:0}
   .it.done .nm{text-decoration:line-through;text-decoration-thickness:1.5px}
   .tx{flex:1;min-width:0}
   .nm{font-size:15px;font-weight:600;letter-spacing:-.01em}
@@ -194,43 +195,43 @@
 
     <div class="grp"><h2>Organ armor</h2><span>5</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">TUDCA</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">NAC</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Vitamin C</div><div class="ds">500 mg</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Omega-3</div><div class="ds">2 g · EPA-skew rTAG</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">CoQ10</div><div class="ds">100 mg · solubilized</div></span><span class="cat">ARM</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">TUDCA</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">NAC</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Vitamin C</div><div class="ds">500 mg</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Omega-3</div><div class="ds">2 g · EPA-skew rTAG</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">CoQ10</div><div class="ds">100 mg · solubilized</div></span><span class="cat">ARM</span></label>
     </ul>
 
     <div class="grp"><h2>Pharma wing</h2><span>6</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Nebivolol</div><div class="ds">5 mg</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Telmisartan</div><div class="ds">80 mg</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Eplerenone</div><div class="ds">25 mg</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Empagliflozin</div><div class="ds">12.5 mg · ½ tab</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Ezetimibe</div><div class="ds">10 mg</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Rosuvastatin</div><div class="ds">10 mg</div></span><span class="cat">PHR</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Nebivolol</div><div class="ds">5 mg</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Telmisartan</div><div class="ds">80 mg</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Eplerenone</div><div class="ds">25 mg</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Empagliflozin</div><div class="ds">12.5 mg · ½ tab</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Ezetimibe</div><div class="ds">10 mg</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Rosuvastatin</div><div class="ds">10 mg</div></span><span class="cat">PHR</span></label>
     </ul>
 
     <div class="grp"><h2>Androgens</h2><span>5</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Testosterone E</div><div class="ds">12.5 mg · IM</div></span><span class="cat">AND</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Trenbolone E</div><div class="ds">30 mg · IM</div></span><span class="cat">AND</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Masteron E</div><div class="ds">40 mg · IM</div></span><span class="cat">AND</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Anadrol</div><div class="ds">50 mg</div></span><span class="tag hot">6 wk</span><span class="cat">AND</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Tamoxifen</div><div class="ds">20 mg</div></span><span class="tag hot">6 wk</span><span class="cat">AND</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Testosterone E</div><div class="ds">12.5 mg · IM</div></span><span class="cat">AND</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Trenbolone E</div><div class="ds">30 mg · IM</div></span><span class="cat">AND</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Masteron E</div><div class="ds">40 mg · IM</div></span><span class="cat">AND</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Anadrol</div><div class="ds">50 mg</div></span><span class="tag hot">6 wk</span><span class="cat">AND</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Tamoxifen</div><div class="ds">20 mg</div></span><span class="tag hot">6 wk</span><span class="cat">AND</span></label>
     </ul>
 
     <div class="grp"><h2>Support</h2><span>9</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">D3 / K2</div><div class="ds">½ tab</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Multivitamin</div><div class="ds">1 cap</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Magnesium</div><div class="ds">2 caps</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Citicoline</div><div class="ds">500 mg</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Memantine</div><div class="ds">5 mg · ½ tab</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Tadalafil</div><div class="ds">10 mg · ½ tab</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Cardarine</div><div class="ds">10 mg</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Abaloparatide</div><div class="ds">100 µg · SC</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Cialis window note</div><div class="ds">NAD+ & Aromasin → Rhythm tab</div></span><span class="cat">SUP</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">D3 / K2</div><div class="ds">½ tab</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Multivitamin</div><div class="ds">1 cap</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Magnesium</div><div class="ds">2 caps</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Citicoline</div><div class="ds">500 mg</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Memantine</div><div class="ds">5 mg · ½ tab</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Tadalafil</div><div class="ds">10 mg · ½ tab</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Cardarine</div><div class="ds">10 mg</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Abaloparatide</div><div class="ds">100 µg · SC</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Cialis window note</div><div class="ds">NAD+ & Aromasin → Rhythm tab</div></span><span class="cat">SUP</span></label>
     </ul>
   </section>
 
@@ -238,30 +239,30 @@
   <section class="panel" id="p-pm">
     <div class="grp" style="margin-top:16px"><h2>Organ armor</h2><span>4</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">TUDCA</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">NAC</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Omega-3</div><div class="ds">2 g</div></span><span class="cat">ARM</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Magnesium</div><div class="ds">1 cap</div></span><span class="cat">ARM</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">TUDCA</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">NAC</div><div class="ds">600 mg</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Omega-3</div><div class="ds">2 g</div></span><span class="cat">ARM</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Magnesium</div><div class="ds">1 cap</div></span><span class="cat">ARM</span></label>
     </ul>
 
     <div class="grp"><h2>Pharma wing</h2><span>3</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Empagliflozin</div><div class="ds">12.5 mg · ½ tab</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">LDN</div><div class="ds">3 mg</div></span><span class="cat">PHR</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Clonidine</div><div class="ds">100 µg</div></span><span class="cat">PHR</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Empagliflozin</div><div class="ds">12.5 mg · ½ tab</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">LDN</div><div class="ds">3 mg</div></span><span class="cat">PHR</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Clonidine</div><div class="ds">100 µg</div></span><span class="cat">PHR</span></label>
     </ul>
 
     <div class="grp"><h2>Peptides & hormones</h2><span>3</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">GHK-Cu · BPC-157 · TB-500</div><div class="ds">SC</div></span><span class="cat">PEP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">HGH</div><div class="ds">15 IU</div></span><span class="cat">PEP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Lantus</div><div class="ds">5 IU</div></span><span class="tag">if needed + meter</span><span class="cat">PEP</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">GHK-Cu · BPC-157 · TB-500</div><div class="ds">SC</div></span><span class="cat">PEP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">HGH</div><div class="ds">15 IU</div></span><span class="cat">PEP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Lantus</div><div class="ds">5 IU</div></span><span class="tag">if needed + meter</span><span class="cat">PEP</span></label>
     </ul>
 
     <div class="grp"><h2>Support</h2><span>2</span></div>
     <ul class="items">
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Melatonin</div><div class="ds">20 mg</div></span><span class="cat">SUP</span></li>
-      <li class="it" tabindex="0"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Ashwagandha</div><div class="ds">500 mg</div></span><span class="cat">SUP</span></li>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Melatonin</div><div class="ds">20 mg</div></span><span class="cat">SUP</span></label>
+      <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></span><span class="tx"><div class="nm">Ashwagandha</div><div class="ds">500 mg</div></span><span class="cat">SUP</span></label>
     </ul>
   </section>
 
@@ -402,7 +403,7 @@
 
   /* daily items */
   var items = document.querySelectorAll('#p-am .it, #p-pm .it');
-  var TOTAL = 36;
+  var TOTAL = items.length;
   function paint(){
     var n = S.checked.length;
     $('done').textContent = n;
@@ -412,15 +413,17 @@
   function toggle(el){
     var i = idx(el);
     if(i < 0) return;
+    var cb = el.querySelector('.cbx');
     var pos = S.checked.indexOf(i);
-    if(pos >= 0){ S.checked.splice(pos,1); el.classList.remove('done'); }
-    else { S.checked.push(i); el.classList.add('done'); }
+    if(pos >= 0){ S.checked.splice(pos,1); el.classList.remove('done'); cb.checked = false; }
+    else { S.checked.push(i); el.classList.add('done'); cb.checked = true; }
     save(); paint();
   }
   Array.prototype.forEach.call(items, function(el, i){
-    if(S.checked.indexOf(i) >= 0) el.classList.add('done');
-    el.addEventListener('click', function(){ toggle(el); });
-    el.addEventListener('keydown', function(e){ if(e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); toggle(el); } });
+    var cb = el.querySelector('.cbx');
+    cb.checked = S.checked.indexOf(i) >= 0;
+    if(cb.checked) el.classList.add('done');
+    cb.addEventListener('change', function(){ toggle(el); });
   });
   paint();
 
