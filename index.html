@@ -202,6 +202,20 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{transition:none!important;animation:none!important}
 }
+
+/* v7 */
+body.edit .it{position:relative}
+body.edit .it::after{content:'\2715';position:absolute;right:12px;top:50%;transform:translateY(-50%);color:#ff6b6b;font:800 14px Manrope,sans-serif}
+body.edit .it.off::after{content:''}
+.it.gone{display:none}
+#editBtn{margin-left:auto;padding:8px 14px;border:0;border-radius:10px;background:#2b2620;color:#f5a524;font:800 12px Manrope,sans-serif;cursor:pointer;box-shadow:0 3px 0 #17130e}
+#editBtn.on{background:#f5a524;color:#231a06}
+.histbox{display:flex;flex-direction:column;gap:10px;max-height:340px;overflow:auto}
+.daycard{background:#171410;border:1px solid #2c2620;border-radius:12px;padding:10px 12px}
+.daycard .dh{display:flex;justify-content:space-between;font:800 12px Manrope,sans-serif;color:#f5a524;margin-bottom:6px}
+.daycard .dl{font:12px/1.55 Inter,sans-serif;color:#cfc6b8}
+.addbtn{display:none;width:100%;padding:10px;margin-top:8px;border:1px dashed #4a4136;border-radius:10px;background:none;color:#9c8f7d;font:700 12px Manrope,sans-serif}
+body.edit .addbtn{display:block}
 </style>
 </head>
 <body>
@@ -216,9 +230,9 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
   <nav class="tabs" role="tablist">
     <button id="t-am" role="tab" aria-selected="true">Morning</button>
     <button id="t-pm" role="tab" aria-selected="false">Evening</button>
-    <button id="t-rh" role="tab" aria-selected="false">Rhythm</button>
+    <button id="t-rh" role="tab" aria-selected="false">Log</button>
   </nav>
-</header>
+<button id="editBtn" title="edit items" aria-label="edit items">EDIT</button></header>
 
 <section class="panel on" id="p-am" role="tabpanel">
   <div class="card tilt" id="cyc">
@@ -286,31 +300,14 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">HGH</span><span class="ds">15 IU</span></span><span class="cat">PEP</span></label>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Lantus</span><span class="ds">5 IU · if needed + meter</span></span><span class="cat">PEP</span></label>
   </ul></div>
-  <div class="grp"><h3>Support</h3><ul>
+  <div class="card tilt"><h3>Support</h3><ul>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Melatonin</span><span class="ds">20 mg</span></span><span class="cat">SUP</span></label>
     <label class="it"><input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Ashwagandha</span><span class="ds">500 mg</span></span><span class="cat">SUP</span></label>
     <label class="it cad2" id="rowCab"><input type="checkbox" class="cbx2"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1204" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l6 6L20 7"/></svg></span><span class="tx"><span class="nm">Cabergoline</span><span class="ds" id="rowCabds">0.25 mg · 2× weekly · with food</span></span><span class="cat">RHY</span></label>
   </ul></div>
 </section>
-
 <section class="panel" id="p-rh" role="tabpanel">
-  <div class="grp"><h3>Rhythm</h3>
-    <div class="cad" id="cadE3D">
-      <span class="tx"><span class="nm">Aromasin</span><span class="ds">6.25 mg · ¼ tab · every 3rd day</span></span>
-      <span class="state" id="e3dSt">—</span>
-      <button class="btn" id="e3dBtn">Log dose</button>
-    </div>
-    <div class="cad" id="cadCab">
-      <span class="tx"><span class="nm">Cabergoline</span><span class="ds">0.25 mg · 2× weekly · with food</span></span>
-      <span class="state" id="cabSt">—</span>
-      <button class="btn" id="cabBtn">Log dose</button>
-    </div>
-    <div class="cad" id="cadNad">
-      <span class="tx"><span class="nm">NAD+</span><span class="ds">100 mg · SC · weekly</span></span>
-      <span class="state" id="nadSt">—</span>
-      <button class="btn" id="nadBtn">Log dose</button>
-    </div>
-  </div>
+  <div class="card tilt"><h3>Day history</h3><div id="hist" class="histbox"></div></div>
 
   <div class="card tilt" id="imRot">
     <h3>IM rotation</h3>
@@ -348,6 +345,7 @@ footer{margin-top:26px;text-align:center;font-family:var(--mono);font-size:10.5p
   <b>Drawer</b><p>LUPI hCG (Rule 7) · Dostiheal reserve · Clomide (PCT) · Euthyrox + Cytomel (sealed)</p>
 </div></details>
 
+<button id="finBtn" style="width:100%;padding:14px;margin:10px 0 0;font:800 15px Manrope,sans-serif;border:0;border-radius:14px;background:#f5a524;color:#231a06;box-shadow:0 4px 0 #9a6a10">FINISH DAY — save today as card</button>
 <footer>checks reset at midnight · saved on this device · <button id="resetBtn" style="font:inherit;background:none;border:1px solid #5c5342;color:#b09a6a;border-radius:6px;padding:4px 10px;cursor:pointer">reset all data</button></footer>
 </div>
 
@@ -367,13 +365,13 @@ $('#t-am').onclick=function(){tab('t-am','p-am')};
 $('#t-pm').onclick=function(){tab('t-pm','p-pm')};
 $('#t-rh').onclick=function(){tab('t-rh','p-rh')};
 
-function fresh(){return {day:now.toDateString(),checked:[],e3d:null,cab:[],nad:[],start:null,im:[]}}
+function fresh(){return {day:now.toDateString(),checked:[],e3d:null,cab:[],nad:[],start:null,im:[],checkedIds:null,custom:null,history:[]}}
 function load(){
   var s; try{s=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){s={}}
   if(!s.day||s.day!==now.toDateString()){
-    s={day:now.toDateString(),checked:[],e3d:s.e3d||null,cab:s.cab||[],nad:s.nad||[],start:s.start||null,im:[]};
+    s={day:now.toDateString(),checked:[],e3d:s.e3d||null,cab:s.cab||[],nad:s.nad||[],start:s.start||null,im:[],checkedIds:null,custom:null,history:[]};
   }
-  if(!s.im)s.im=[];
+  if(!s.im)s.im=[]; if(s.checkedIds===undefined)s.checkedIds=null; if(!s.custom)s.custom={hid:[],ed:{},add:[]}; if(!s.history)s.history=[];
   return s;
 }
 function save(){localStorage.setItem(KEY,JSON.stringify(S))}
@@ -389,23 +387,13 @@ function phPaint(){
 phPaint();
 
 /* items */
-var items=[].slice.call(document.querySelectorAll('.it input.cbx'));
-var TOTAL=items.length;
-function paint(){
-  var n=S.checked.length, pct=TOTAL?Math.round(n/TOTAL*100):0;
-  $('#pnum').textContent=n+'/'+TOTAL;
-  $('#pfill').style.width=pct+'%';
-}
-items.forEach(function(cb,i){
-  cb.checked=S.checked.indexOf(i)>-1;
-  cb.addEventListener('change',function(){
-    if(!S.start){cb.checked=false;return}
-    var k=S.checked.indexOf(i);
-    if(cb.checked&&k<0)S.checked.push(i);
-    if(!cb.checked&&k>-1)S.checked.splice(k,1);
-    save();paint();
-  });
-});
+const rowId=(el)=>{const r=el.closest('.it');if(!r.dataset.id){const nm=r.querySelector('.nm');const pn=(r.closest('.panel')||{}).id||'x';r.dataset.id=nm?('k-'+pn+'-'+nm.textContent.trim().toLowerCase().replace(/[^a-z0-9]+/g,'-')):('r'+Math.random().toString(36).slice(2,8));}return r.dataset.id;};
+(function migrateIdx(){ if(S.checkedIds===null||S.checkedIds===undefined){ S.checkedIds=[]; document.querySelectorAll('.it input.cbx').forEach((cb,i)=>{const id=rowId(cb); if(S.checked&&S.checked.indexOf(i)>-1)S.checkedIds.push(id);}); S.checked=null; save(); } })();
+let items=[...document.querySelectorAll('.it input.cbx')];
+let TOTAL=items.length;
+function paint(){ let n=0; items.forEach(cb=>{const on=S.checkedIds.indexOf(rowId(cb))>-1; cb.checked=on; cb.closest('.it').classList.toggle('done',on); if(on)n++; }); $('#pnum').textContent=n+'/'+TOTAL; $('#pfill').style.width=(TOTAL?100*n/TOTAL:0)+'%'; }
+function wire(){ items.forEach(cb=>{ cb.addEventListener('change',()=>{ if(!S.start){cb.checked=false;return;} const id=rowId(cb); const ix=S.checkedIds.indexOf(id); if(cb.checked&&ix<0)S.checkedIds.push(id); if(!cb.checked&&ix>-1)S.checkedIds.splice(ix,1); save(); paint(); }); }); }
+wire();
 
 /* cycle tracker */
 function cyc(){
@@ -439,32 +427,10 @@ function locks(){
 
 /* cadence */
 function e3dAge(){if(!S.e3d)return 99;return Math.floor((Date.now()-S.e3d)/864e5)}
-function btnTxt(){
-  $('#e3dBtn').textContent=e3dAge()===0?'Undo today':'Log dose';
-  $('#e3dBtn').classList.toggle('undo',e3dAge()===0);
-  $('#cabBtn').textContent=todayIn(S.cab)?'Undo today':'Log dose';
-  $('#cabBtn').classList.toggle('undo',todayIn(S.cab));
-  $('#nadBtn').textContent=todayIn(S.nad)?'Undo today':'Log dose';
-  $('#nadBtn').classList.toggle('undo',todayIn(S.nad));
-}
 function dstr(t){var d=new Date(t);return d.toDateString()}
 function todayIn(a){return a.some(function(t){return dstr(t)===new Date().toDateString()})}
 function rmToday(a){return a.filter(function(t){return dstr(t)!==new Date().toDateString()})}
 function wkKey(t){var d=new Date(t);var o=new Date(d.getFullYear(),0,1);return d.getFullYear()+'w'+Math.ceil(((d-o)/864e5+o.getDay()+1)/7)}
-function e3d(){
-  var a=e3dAge(),st=$('#e3dSt');
-  if(a===0){st.textContent='done today';st.className='state ok'}
-  else if(a>=3){st.textContent='due';st.className='state due'}
-  else{st.textContent='day '+a+'/3';st.className='state'}
-}
-function weekly(arr,goal,el){
-  var k=wkKey(Date.now()),n=arr.filter(function(t){return wkKey(t)===k}).length;
-  el.textContent=n+'/'+goal+' this wk';
-  el.className='state'+(n>=goal?' ok':'');
-}
-$('#e3dBtn').onclick=function(){if(!S.start)return;S.e3d=e3dAge()===0?null:Date.now();save();e3d();btnTxt();paintCadRows()};
-$('#cabBtn').onclick=function(){if(!S.start)return;S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save();weekly(S.cab,2,$('#cabSt'));btnTxt();paintCadRows()};
-$('#nadBtn').onclick=function(){if(!S.start)return;S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save();weekly(S.nad,1,$('#nadSt'));btnTxt();paintCadRows()};
 
 /* IM rotation */
 var SPOTS=['L shoulder','R shoulder','L glute','R glute'];
@@ -544,17 +510,82 @@ function paintCadRows(){
   var r=document.getElementById(id);if(!r)return;
   r.addEventListener('change',function(){
     if(!S.start)return;
-    if(id==='rowE3D'){S.e3d=e3dAge()===0?null:Date.now();save();e3d();btnTxt()}
-    if(id==='rowCab'){S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save();weekly(S.cab,2,$('#cabSt'));btnTxt()}
-    if(id==='rowNad'){S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save();weekly(S.nad,1,$('#nadSt'));btnTxt()}
+    if(id==='rowE3D'){S.e3d=e3dAge()===0?null:Date.now();save()}
+    if(id==='rowCab'){S.cab=todayIn(S.cab)?rmToday(S.cab):S.cab.concat([Date.now()]);save()}
+    if(id==='rowNad'){S.nad=todayIn(S.nad)?rmToday(S.nad):S.nad.concat([Date.now()]);save()}
     paintCadRows();
   });
 });
 document.getElementById('resetBtn').onclick=function(){
   if(confirm('Reset everything? Clears all logs, vitals and the start date.')){localStorage.removeItem('proto-v4');localStorage.removeItem('proto-vitals');location.reload()}
 };
-cyc();locks();impaint();paint();e3d();weekly(S.cab,2,$('#cabSt'));weekly(S.nad,1,$('#nadSt'));btnTxt();vpaint();
+cyc();locks();impaint();paint();vpaint();applyCustom();renderHist();
 paintCadRows();
+
+/* ---- v7: CRUD + day history ---- */
+function applyCustom(){
+ const C=S.custom;
+ document.querySelectorAll('.it').forEach(r=>{
+   const id=r.dataset.id||(r.dataset.id='r'+Math.random().toString(36).slice(2,8));
+   if(C.hid.indexOf(id)>-1){r.classList.add('gone');return;}
+   if(C.ed[id]){const nm=r.querySelector('.nm'),ds=r.querySelector('.ds');if(nm)nm.textContent=C.ed[id].n;if(ds)ds.textContent=C.ed[id].d;}
+ });
+ (C.add||[]).forEach(a=>{
+   const ul=document.querySelector('#'+a.panel+' .grp:nth-of-type('+a.gi+') ul')||document.querySelector('#'+a.panel+' ul');
+   if(!ul)return; if(ul.querySelector('[data-id="'+a.id+'"]'))return;
+   const li=document.createElement('label');li.className='it';li.dataset.id=a.id;
+   li.innerHTML='<input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 12 10"><path d="M2 5l3 3 5-7"/></svg></span><span class="tx"><span class="nm">'+a.n+'</span><span class="ds">'+a.d+'</span></span><span class="cat">USR</span>';
+   ul.appendChild(li);
+ });
+ items=[...document.querySelectorAll('.it input.cbx')];TOTAL=items.length;wire();paint();
+}
+document.querySelectorAll('#p-am .grp,#p-pm .grp').forEach((g,gi)=>{
+ const b=document.createElement('button');b.className='addbtn';b.textContent='+ add item';
+ b.onclick=()=>{const n=prompt('Name (e.g. Creatine):');if(!n)return;const d=prompt('Dose (e.g. 5 g):')||'';
+  const panel=g.closest('.panel').id;const pg=document.querySelectorAll('#'+panel+' .grp');
+  const id='u'+Date.now().toString(36);S.custom.add.push({id,n,d,panel,gi:[...pg].indexOf(g)+1});save();
+  const ul=g.querySelector('ul');const li=document.createElement('label');li.className='it';li.dataset.id=id;
+  li.innerHTML='<input type="checkbox" class="cbx"><span class="box"><svg viewBox="0 0 12 10"><path d="M2 5l3 3 5-7"/></svg></span><span class="tx"><span class="nm">'+n+'</span><span class="ds">'+d+'</span></span><span class="cat">USR</span>';
+  ul.appendChild(li);items=[...document.querySelectorAll('.it input.cbx')];TOTAL=items.length;wire();paint();};
+ g.appendChild(b);
+});
+$('#editBtn').onclick=()=>{document.body.classList.toggle('edit');$('#editBtn').classList.toggle('on');};
+document.addEventListener('click',(e)=>{
+ if(!document.body.classList.contains('edit'))return;
+ const it=e.target.closest('.it');if(!it||it.classList.contains('cad2'))return;
+ const r=it.getBoundingClientRect();
+ if(e.clientX>r.right-44){ // ✕ zone -> delete
+  const id=it.dataset.id;S.custom.hid.push(id);if(S.checkedIds){const ix=S.checkedIds.indexOf(id);if(ix>-1)S.checkedIds.splice(ix,1);}save();applyCustom();return;
+ }
+ const nm=it.querySelector('.nm'),ds=it.querySelector('.ds');const id=it.dataset.id;
+ const n=prompt('Edit name:',nm?nm.textContent:'');if(n===null)return;
+ const d=prompt('Edit dose:',ds?ds.textContent:'');if(d===null)return;
+ S.custom.ed[id]={n:n||'(item)',d:d||''};save();applyCustom();
+},true);
+function finishDay(){
+ if(!S.start){alert('Start the run first.');return;}
+ if(S.history.length&&S.history[0].day===new Date().toDateString()){alert('Today already logged.');return;}
+ const names=[];document.querySelectorAll('#p-am .it,#p-pm .it').forEach(r=>{if(r.classList.contains('gone')||r.classList.contains('cad2'))return;const cb=r.querySelector('input.cbx');if(cb&&cb.checked){const nm=r.querySelector('.nm');names.push(nm?nm.textContent:'?');}});
+ const cad=[];if(S.e3d&&e3dAge()<1)cad.push('Aromasin');if(todayIn(S.cab))cad.push('Caber');if(todayIn(S.nad))cad.push('NAD+');
+ const im=(S.im||[]).filter(Boolean).length;
+ let vit=null;try{const V=JSON.parse(localStorage.getItem('proto-vitals')||'[]');if(V.length)vit=V[V.length-1];}catch(_){}
+ S.history.unshift({day:new Date().toDateString(),n:names.length,names:names,cad:cad,im:im,vit:vit});
+ if(S.history.length>120)S.history.length=120;
+ save();renderHist();
+ alert('Day saved: '+names.length+' items'+(cad.length?' · '+cad.join(', '):'')+(im?' · IM '+im+'/3':''));
+}
+function renderHist(){
+ const h=$('#hist');if(!h)return;
+ h.innerHTML=S.history.length?'':'<div class="dl" style="color:#8d8172;font:12px Inter,sans-serif">no days finished yet — press FINISH DAY at night</div>';
+ S.history.forEach(d=>{
+  const c=document.createElement('div');c.className='daycard';
+  const vit=d.vit&&d.vit.g?(' · glu '+d.vit.g+(d.vit.b?' · '+d.vit.b:'')):'';
+  c.innerHTML='<div class="dh"><span>'+d.day+'</span><span>'+d.n+' items'+(d.im?' · IM '+d.im+'/3':'')+(d.cad&&d.cad.length?' · '+d.cad.join(', '):'')+vit+'</span></div>'+(d.names.length?'<div class="dl">'+d.names.join(' · ')+'</div>':'<div class="dl" style="color:#8d8172">nothing checked</div>');
+  h.appendChild(c);
+ });
+}
+$('#finBtn').onclick=finishDay;
+
 })();
 </script>
 </body>
