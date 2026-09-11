@@ -631,7 +631,7 @@ var resetArm=false;
 $('#resetBtn').addEventListener('click',function(){
   var b=this;
   if(!resetArm){resetArm=true;b.classList.add('sure');b.textContent='Tap again to wipe EVERYTHING';setTimeout(function(){resetArm=false;b.classList.remove('sure');b.textContent='Reset all data'},2500);return}
-  localStorage.removeItem(KEY);localStorage.removeItem(VK8);location.reload();
+  localStorage.removeItem(KEY);localStorage.removeItem(VK8);localStorage.removeItem('proto-v8-bloods');localStorage.removeItem(VKEY);location.reload();
 });
 
 /* ---------- toast ---------- */
