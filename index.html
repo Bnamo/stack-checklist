@@ -335,7 +335,7 @@ return [
  {id:'w5',n:'Tamoxifen',d:'20 mg',p:'am',g:'Androgens',t:'w6'},
  {id:'d1',n:'D3 + K2',d:'1 tablet · 125 µg D3 (5 000 IE) + 200 µg K2',o:'ONE tablet daily = full dose of both — titrate via 25(OH)D 40–60 ng/mL at next bloods',p:'am',g:'Support'},
  {id:'m1',n:'Multivitamin',d:'1 cap',p:'am',g:'Support'},
- {id:'m2',n:'Magnesium',d:'2 caps',p:'am',g:'Support'},
+ {id:'m2',n:'Magnesium',d:'2 caps · 100 mg Mg each (=200 mg)',o:'500 mg bisglycinate = 100 mg ELEMENTAL per cap · 3 caps/day (2 AM + 1 PM) = 300 mg elemental — sweat days can add a 4th (=400 mg)',p:'am',g:'Support'},
  {id:'i1',n:'Citicoline',d:'500 mg',p:'am',g:'Support'},
  {id:'i2',n:'Memantine',d:'5 mg · ½ tab',p:'am',g:'Support'},
  {id:'i3',n:'Tadalafil',d:'10 mg · ½ tab',p:'am',g:'Support'},
@@ -346,7 +346,7 @@ return [
  {id:'T2b',n:'TUDCA',d:'600 mg',p:'pm',g:'Organ armor'},
  {id:'n2',n:'NAC',d:'600 mg',p:'pm',g:'Organ armor'},
  {id:'o2',n:'Omega-3',d:'2 g',p:'pm',g:'Organ armor'},
- {id:'m3',n:'Magnesium',d:'1 cap',p:'pm',g:'Organ armor'},
+ {id:'m3',n:'Magnesium',d:'1 cap · 100 mg elemental',p:'pm',g:'Organ armor'},
  {id:'g2',n:'Empagliflozin',d:'12.5 mg · ½ tab',p:'pm',g:'Pharma wing'},
  {id:'l1',n:'LDN',d:'3 mg',p:'pm',g:'Pharma wing'},
  {id:'k1',n:'Clonidine',d:'100 µg',p:'pm',g:'Pharma wing'},
@@ -642,6 +642,7 @@ function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clea
 S=load();
 (function(){var d3=null;for(var i=0;i<S.items.length;i++){if(S.items[i].id==='d1'||/^D3/i.test(S.items[i].n)){d3=S.items[i];break}}
 if(d3&&String(d3.d||'').indexOf('125')<0){d3.n='D3 + K2';d3.d='1 tablet · 125 µg D3 (5 000 IE) + 200 µg K2';d3.o='ONE tablet daily = full dose of both — titrate via 25(OH)D 40–60 ng/mL at next bloods';save();}})();
+(function(){var ch=false;for(var i=0;i<S.items.length;i++){var it=S.items[i];if(it.id==='m2'||(/^mag/i.test(it.n)&&it.p!=='pm')){if(String(it.d||'').indexOf('100 mg')<0){it.d='2 caps · 100 mg Mg each (=200 mg)';it.o='500 mg bisglycinate = 100 mg ELEMENTAL per cap · 3 caps/day (2 AM + 1 PM) = 300 mg elemental — sweat days can add a 4th (=400 mg)';ch=true}}if(it.id==='m3'||(/^mag/i.test(it.n)&&it.p==='pm')){if(String(it.d||'').indexOf('1 cap')<0||String(it.d||'').indexOf('100 mg')<0){it.d='1 cap · 100 mg elemental';delete it.o;ch=true}}}if(ch)save();})();
 save();
 phPaint();render();cyc();locks();impaint();vpaint();histPaint();
 if(new Date().getHours()>=15&&S.start)tab('t-pm','p-pm');
