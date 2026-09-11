@@ -333,7 +333,7 @@ return [
  {id:'w3',n:'Masteron E',d:'40 mg · IM',p:'am',g:'Androgens'},
  {id:'w4',n:'Anadrol',d:'50 mg',p:'am',g:'Androgens',t:'w6'},
  {id:'w5',n:'Tamoxifen',d:'20 mg',p:'am',g:'Androgens',t:'w6'},
- {id:'d1',n:'D3 + K2',d:'1 cap · 125 µg D3 (5 000 IE) + 200 µg K2',o:'one capsule = full daily dose of both — titrate via 25(OH)D 40–60 ng/mL at next bloods',p:'am',g:'Support'},
+ {id:'d1',n:'D3 + K2',d:'1 tablet · 125 µg D3 (5 000 IE) + 200 µg K2',o:'ONE tablet daily = full dose of both — titrate via 25(OH)D 40–60 ng/mL at next bloods',p:'am',g:'Support'},
  {id:'m1',n:'Multivitamin',d:'1 cap',p:'am',g:'Support'},
  {id:'m2',n:'Magnesium',d:'2 caps',p:'am',g:'Support'},
  {id:'i1',n:'Citicoline',d:'500 mg',p:'am',g:'Support'},
@@ -639,7 +639,10 @@ var toastT;
 function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('show')},2200)}
 
 /* ---------- boot ---------- */
-S=load();save();
+S=load();
+(function(){var d3=null;for(var i=0;i<S.items.length;i++){if(S.items[i].id==='d1'||/^D3/i.test(S.items[i].n)){d3=S.items[i];break}}
+if(d3&&String(d3.d||'').indexOf('125')<0){d3.n='D3 + K2';d3.d='1 tablet · 125 µg D3 (5 000 IE) + 200 µg K2';d3.o='ONE tablet daily = full dose of both — titrate via 25(OH)D 40–60 ng/mL at next bloods';save();}})();
+save();
 phPaint();render();cyc();locks();impaint();vpaint();histPaint();
 if(new Date().getHours()>=15&&S.start)tab('t-pm','p-pm');
 setInterval(function(){var d=new Date().toDateString();if(d!==S.day){S.day=d;S.checked=[];S.im=[];save();render();cadPaint();impaint()}phPaint()},60000);
